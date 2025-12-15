@@ -27,7 +27,7 @@ import BlackButton from '@/components/common/BlackButton.vue'
                 <MoveRightIcon :size="20" class="group-hover:translate-x-2 transition-transform" />
               </BlackButton>
 
-              <button class="btn btn-outline btn-lg font-normal">Ver catálogo</button>
+             <RouterLink :to="{name: 'lista_productos'}" class="btn btn-outline btn-lg font-normal">Ver Catálogo</RouterLink>
             </div>
 
             <div class="flex gap-8">
