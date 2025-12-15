@@ -1,22 +1,14 @@
+<script setup lang="ts">
+import { LogInIcon, MenuIcon } from 'lucide-vue-next'
+import BlackButton from './common/BlackButton.vue'
+</script>
+
 <template>
-  <div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar bg-white/80 shadow-sm fixed top-0 backdrop-blur-md z-30">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h8m-8 6h16"
-            />
-          </svg>
+          <MenuIcon :size="20" />
         </div>
         <ul
           tabindex="-1"
@@ -52,7 +44,10 @@
       </ul>
     </div>
     <div class="navbar-end">
-      <a class="btn bg-neutral-800 text-white border-none">Iniciar sesión</a>
+      <BlackButton class="group flex items-center gap-2.5">
+        <LogInIcon class="group-hover:translate-x-1 transition" />
+        <p>Iniciar sesión</p>
+      </BlackButton>
     </div>
   </div>
 </template>
