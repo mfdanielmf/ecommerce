@@ -1,5 +1,5 @@
 <template>
-  <navbar class="navbar bg-base-100 shadow-sm">
+  <div class="navbar bg-base-100 shadow-sm">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -54,5 +54,5 @@
     <div class="navbar-end">
       <a class="btn bg-neutral-800 text-white border-none">Iniciar sesión</a>
     </div>
-  </navbar>
+  </div>
 </template>
