@@ -5,7 +5,7 @@ import BlackButton from '@/components/common/BlackButton.vue'
 
 <template>
   <main>
-    <section class="flex items-center pt-20 min-h-screen">
+    <section class="flex items-center py-20 min-h-screen">
       <div class="max-w-7xl mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="space-y-8">
@@ -27,7 +27,11 @@ import BlackButton from '@/components/common/BlackButton.vue'
                 <MoveRightIcon :size="20" class="group-hover:translate-x-2 transition-transform" />
               </BlackButton>
 
-             <RouterLink :to="{name: 'lista_productos'}" class="btn btn-outline btn-lg font-normal">Ver Catálogo</RouterLink>
+              <RouterLink
+                :to="{ name: 'lista_productos' }"
+                class="btn btn-outline btn-lg font-normal"
+                >Ver Catálogo</RouterLink
+              >
             </div>
 
             <div class="flex gap-8">
