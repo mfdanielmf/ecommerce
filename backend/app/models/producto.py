@@ -15,3 +15,14 @@ class Producto(db.Model):
     stock = Column(Integer, default=0, nullable=False)
     img_url = Column(String(500), nullable=True)
     fecha_creacion = Column(DateTime, default=datetime.now, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'descripcion': self.descripcion,
+            'precio': self.precio,
+            'stock': self.stock,
+            'img_url': self.img_url,
+            'fecha_creacion': self.fecha_creacion
+        }
