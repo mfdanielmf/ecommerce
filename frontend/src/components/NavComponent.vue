@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { LogInIcon, MenuIcon } from 'lucide-vue-next'
 import BlackButton from './common/BlackButton.vue'
+import { RouterLink } from 'vue-router';
 </script>
 
 <template>
@@ -14,8 +15,12 @@ import BlackButton from './common/BlackButton.vue'
           tabindex="-1"
           class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
         >
-          <li><a>Inicio</a></li>
-          <li><a>Productos</a></li>
+          <li>
+            <RouterLink :to="{name: 'home'}">Inicio</RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{name: 'lista_productos'}">Productos</RouterLink>
+          </li>
           <li>
             <a>Categorías</a>
             <ul class="p-2">
@@ -25,13 +30,17 @@ import BlackButton from './common/BlackButton.vue'
           </li>
         </ul>
       </div>
-      <a class="btn btn-ghost text-xl text-blue-600">TechStore</a>
+      <RouterLink :to="{name: 'home'}" class="btn btn-ghost text-xl text-blue-600">TechStore</RouterLink>
     </div>
 
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li><a>Inicio</a></li>
-        <li><a>Productos</a></li>
+        <li>
+          <RouterLink :to="{name: 'home'}">Inicio</RouterLink>
+        </li>
+        <li>
+          <RouterLink :to="{name: 'lista_productos'}">Productos</RouterLink>
+        </li>
         <li>
           <details>
             <summary>Categorías</summary>
