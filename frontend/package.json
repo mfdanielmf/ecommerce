@@ -16,6 +16,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@vueuse/core": "^14.1.0",
+    "axios": "^1.13.2",
     "daisyui": "^5.5.14",
     "lucide-vue-next": "^0.561.0",
     "pinia": "^3.0.4",
