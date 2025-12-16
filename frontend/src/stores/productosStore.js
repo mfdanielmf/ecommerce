@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 export const productStore = defineStore('productos', () => {
   const productos = ref([])
-  const error = ref(false)
+  const error = ref(null)
   const cargando = ref(false)
 
   async function fetchProductos() {
@@ -12,7 +12,8 @@ export const productStore = defineStore('productos', () => {
 
     cargando.value = true
     try {
-      productos.value = await getProductos()
+      const productosFetch = await getProductos()
+      productos.value = productosFetch.products
     } catch (e) {
       error.value = e.message
     } finally {
