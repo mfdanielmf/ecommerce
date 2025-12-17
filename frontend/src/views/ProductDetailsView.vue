@@ -30,7 +30,7 @@ onMounted(async () => {
 
   <ErrorMessage v-else-if="almacenProductos.error">{{ almacenProductos.error }}</ErrorMessage>
 
-  <main v-else class="min-h-screen py-20 px-4r">
+  <main v-else class="min-h-screen py-20 px-4">
     <h1 v-if="producto">Detalles producto {{ producto.id }}</h1>
   </main>
 </template>
