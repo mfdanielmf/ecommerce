@@ -3,19 +3,22 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const productStore = defineStore('productos', () => {
-  const productos = ref([])
+  const productos = ref({})
   const error = ref(null)
   const cargando = ref(false)
-  const productoId = ref(null)
+  const listaCargada = ref(false)
 
   //TODOS
   async function fetchProductos() {
-    if (productos.value.length) return
+    if (listaCargada.value) return
 
     cargando.value = true
     try {
       const productosFetch = await getProductos()
-      productos.value = productosFetch.products
+      productosFetch.products.forEach((p) => {
+        productos.value[p.id] = p
+      })
+      listaCargada.value = true
     } catch {
       error.value = 'Error al obtener la lista de productos'
     } finally {
@@ -24,23 +27,17 @@ export const productStore = defineStore('productos', () => {
   }
 
   //FILTRAR
-  function filtrarPorId(id) {
-    return productos.value.find((productoActual) => productoActual.id === Number(id))
+  function getProductoPorId(id) {
+    return productos.value[id]
   }
 
   async function fetchProductoId(id) {
-    const productoActual = filtrarPorId(id)
-
-    if (productoActual) {
-      productoId.value = productoActual
-
-      return
-    }
+    if (getProductoPorId(id)) return
 
     cargando.value = true
     try {
       const productoFetch = await getProductoId(id)
-      productoId.value = productoFetch.producto
+      productos.value[productoFetch.producto.id] = productoFetch.producto
     } catch {
       error.value = `Error al obtener el producto con ID ${id}`
     } finally {
@@ -48,5 +45,5 @@ export const productStore = defineStore('productos', () => {
     }
   }
 
-  return { productos, productoId, error, cargando, fetchProductos, fetchProductoId, filtrarPorId }
+  return { productos, error, cargando, fetchProductos, fetchProductoId, getProductoPorId }
 })

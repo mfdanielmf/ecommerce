@@ -1,6 +1,6 @@
 <script setup>
 import { productStore } from '@/stores/productosStore'
-import { onMounted, computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import ErrorMessage from '@/components/common/ErrorMessage.vue'
 
@@ -11,14 +11,16 @@ const props = defineProps({
 })
 
 const almacenProductos = productStore()
+
 const producto = computed(() => {
-  return almacenProductos.productoId
+  return almacenProductos.getProductoPorId(Number(props.id))
 })
 
 onMounted(async () => {
   almacenProductos.error = null
+
   if (!producto.value) {
-    await almacenProductos.fetchProductoId(props.id)
+    await almacenProductos.fetchProductoId(Number(props.id))
   }
 })
 </script>

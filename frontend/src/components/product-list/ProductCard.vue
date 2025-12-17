@@ -1,20 +1,19 @@
 <script setup>
 defineProps({
-  producto:{
+  producto: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 </script>
 
 <template>
-  <div class="card bg-base-100 w-auto shadow-sm">
+  <RouterLink
+    :to="{ name: 'detalles_producto', params: { id: producto.id } }"
+    class="card bg-base-100 w-auto shadow-sm"
+  >
     <figure>
-      <img
-        :src="producto.img_url"
-        :alt="producto.nombre"
-        loading="lazy"
-      />
+      <img :src="producto.img_url" :alt="producto.nombre" loading="lazy" />
     </figure>
 
     <div class="card-body">
@@ -22,8 +21,8 @@ defineProps({
       <p class="h-15 overflow-hidden">{{ producto.descripcion }}</p>
       <div class="card-actions justify-between items-center">
         <p class="font-semibold text-xl">{{ producto.precio }} €</p>
-        <button class="btn btn-primary">Añadir al carrito</button>
+        <button class="btn btn-primary" @click.stop.prevent>Añadir al carrito</button>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>

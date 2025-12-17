@@ -22,7 +22,7 @@ onMounted(() => {
 
   <main v-else class="min-h-screen py-20 px-4">
     <div class="mx-auto grid justify-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      <div v-for="producto in productosStore.productos" :key="producto.id">
+      <div v-for="producto in productosStore.productos" :key="producto">
         <ProductCard :producto="producto" />
       </div>
     </div>
