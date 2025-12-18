@@ -8,6 +8,7 @@ defineProps({
     required: false,
   },
   stock: {
+    type: Number,
     required: true,
   },
 })
