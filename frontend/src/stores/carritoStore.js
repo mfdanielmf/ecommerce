@@ -1,11 +1,12 @@
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
+import { computed } from 'vue'
 
 export const carritoStore = defineStore('carrito', () => {
-  const carrito = useLocalStorage('carrito', [])
+  const carrito = useLocalStorage('carrito_techstore', [])
 
   function encontrarProducto(id) {
-    return carrito.value.find((productoActual) => (productoActual.id = id))
+    return carrito.value.find((productoActual) => productoActual.id === id)
   }
 
   function añadirProducto(producto, cantidad) {
@@ -23,5 +24,13 @@ export const carritoStore = defineStore('carrito', () => {
     }
   }
 
-  return { carrito, encontrarProducto, añadirProducto }
+  const cantidadTotalProductos = computed(() => {
+    if (carrito.value.length) {
+      return carrito.value.reduce((total, productoActual) => total + productoActual.cantidad, 0)
+    }
+
+    return 0
+  })
+
+  return { carrito, encontrarProducto, añadirProducto, cantidadTotalProductos }
 })

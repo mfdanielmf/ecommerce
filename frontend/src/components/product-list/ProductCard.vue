@@ -1,10 +1,16 @@
 <script setup>
-defineProps({
+import { carritoStore } from '@/stores/carritoStore'
+
+const props = defineProps({
   producto: {
     type: Object,
     required: true,
   },
 })
+
+const añadirProductoCarrito = () => {
+  carritoStore().añadirProducto(props.producto, 1)
+}
 </script>
 
 <template>
@@ -21,7 +27,9 @@ defineProps({
       <p class="h-15 overflow-hidden">{{ producto.descripcion }}</p>
       <div class="card-actions justify-between items-center">
         <p class="font-semibold text-xl">{{ producto.precio }} €</p>
-        <button class="btn btn-primary" @click.stop.prevent>Añadir al carrito</button>
+        <button class="btn btn-primary" @click.stop.prevent="añadirProductoCarrito">
+          Añadir al carrito
+        </button>
       </div>
     </div>
   </RouterLink>
