@@ -1,29 +1,34 @@
 <script setup>
 import { ShoppingCartIcon } from 'lucide-vue-next'
 import QuantitySelectorComponent from './QuantitySelectorComponent.vue'
+import { carritoStore } from '@/stores/carritoStore'
+import { ref } from 'vue'
 
-defineProps({
-  descripcion: {
-    type: String,
-    required: false,
-  },
-  stock: {
-    type: Number,
+const props = defineProps({
+  producto: {
+    type: Object,
     required: true,
   },
 })
+
+const cantidad = ref(1)
+
+const añadirProducto = () => {
+  carritoStore().añadirProducto(props.producto, cantidad.value)
+}
 </script>
 
 <template>
-  <p v-if="descripcion" class="mt-8 border-t border-neutral-200 pt-4 text-neutral-600">
-    {{ descripcion }}
+  <p v-if="producto.descripcion" class="mt-8 border-t border-neutral-200 pt-4 text-neutral-600">
+    {{ producto.descripcion }}
   </p>
 
   <div class="w-62.5 max-w-sm relative mt-4">
-    <QuantitySelectorComponent :stock="stock" />
+    <QuantitySelectorComponent :stock="producto.stock" v-model="cantidad" />
 
     <button
       class="flex items-center justify-center gap-4 mt-6 font-semibold w-full btn btn-primary btn-lg"
+      @click="añadirProducto"
     >
       <ShoppingCartIcon />
       <p>Añadir al carrito</p>

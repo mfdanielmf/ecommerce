@@ -13,6 +13,6 @@ defineProps({
 <template>
   <div class="flex flex-col justify-center not-lg:items-center">
     <TopBody :nombre="producto.nombre" :precio="producto.precio" />
-    <BottomBodyComponent :descripcion="producto.descripcion" :stock="producto.stock" />
+    <BottomBodyComponent :producto="producto" />
   </div>
 </template>

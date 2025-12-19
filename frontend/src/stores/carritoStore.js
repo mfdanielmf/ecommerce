@@ -13,7 +13,7 @@ export const carritoStore = defineStore('carrito', () => {
     const productoExistente = encontrarProducto(producto.id)
 
     if (productoExistente) {
-      productoExistente.cantidad++
+      productoExistente.cantidad += cantidad
     } else {
       carrito.value.push({
         id: producto.id,
