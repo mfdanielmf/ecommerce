@@ -3,6 +3,7 @@ import { ShoppingCartIcon } from 'lucide-vue-next'
 import QuantitySelectorComponent from './QuantitySelectorComponent.vue'
 import { carritoStore } from '@/stores/carritoStore'
 import { computed, ref } from 'vue'
+import { toast } from 'vue-sonner'
 
 const props = defineProps({
   producto: {
@@ -22,7 +23,9 @@ const añadirProducto = () => {
     productoLocalStorage.value &&
     productoLocalStorage.value.cantidad + cantidad.value > props.producto.stock
   )
-    return
+    return toast.error('¡No puedes añadir tantos productos!', {
+      description: `MAX: ${props.producto.stock} En tu carrito: ${productoLocalStorage.value.cantidad}`,
+    })
 
   carritoStore().añadirProducto(props.producto, cantidad.value)
 }
