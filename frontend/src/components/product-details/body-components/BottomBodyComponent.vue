@@ -2,7 +2,7 @@
 import { ShoppingCartIcon } from 'lucide-vue-next'
 import QuantitySelectorComponent from './QuantitySelectorComponent.vue'
 import { carritoStore } from '@/stores/carritoStore'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   producto: {
@@ -13,7 +13,17 @@ const props = defineProps({
 
 const cantidad = ref(1)
 
+const productoLocalStorage = computed(() => {
+  return carritoStore().encontrarProducto(props.producto.id)
+})
+
 const añadirProducto = () => {
+  if (
+    productoLocalStorage.value &&
+    productoLocalStorage.value.cantidad + cantidad.value > props.producto.stock
+  )
+    return
+
   carritoStore().añadirProducto(props.producto, cantidad.value)
 }
 </script>
