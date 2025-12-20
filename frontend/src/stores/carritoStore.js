@@ -1,6 +1,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
+import { toast } from 'vue-sonner'
 
 export const carritoStore = defineStore('carrito', () => {
   const carrito = useLocalStorage('carrito_techstore', [])
@@ -22,6 +23,8 @@ export const carritoStore = defineStore('carrito', () => {
         cantidad: cantidad,
       })
     }
+
+    toast.success(`¡Se ha añadido el producto ${producto.nombre} al carrito!`)
   }
 
   const cantidadTotalProductos = computed(() => {
