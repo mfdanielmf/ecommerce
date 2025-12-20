@@ -1,4 +1,5 @@
 <script setup>
+import VaciarCarritoDialog from '@/components/nav/carrito/VaciarCarritoDialog.vue'
 import { carritoStore } from '@/stores/carritoStore'
 import { PlusIcon, MinusIcon, Trash2 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
@@ -20,6 +21,11 @@ function sumarCantidad(producto) {
     return toast.error('¡No queda tanto stock!')
 
   producto.cantidad++
+}
+
+function vaciarCarrito() {
+  store.carrito = []
+  toast.info('Has vaciado el carrito', { position: 'top-center' })
 }
 </script>
 
@@ -75,5 +81,8 @@ function sumarCantidad(producto) {
     </li>
   </ul>
 
-  <button class="btn btn-primary mt-5">Finalizar Compra</button>
+  <div class="mt-5 flex flex-col gap-2">
+    <button class="btn btn-primary">Finalizar Compra</button>
+    <VaciarCarritoDialog @vaciar-carrito="vaciarCarrito" />
+  </div>
 </template>

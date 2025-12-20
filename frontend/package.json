@@ -20,7 +20,7 @@
     "daisyui": "^5.5.14",
     "lucide-vue-next": "^0.561.0",
     "pinia": "^3.0.4",
-    "tailwindcss": "^4.1.18",
+    "radix-vue": "^1.9.17",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3",
     "vue-sonner": "^2.0.9"
@@ -29,10 +29,13 @@
     "@eslint/js": "^9.39.1",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/eslint-config-prettier": "^10.2.0",
+    "autoprefixer": "^10.4.23",
     "eslint": "^9.39.1",
     "eslint-plugin-vue": "~10.5.1",
     "globals": "^16.5.0",
+    "postcss": "^8.5.6",
     "prettier": "3.6.2",
+    "tailwindcss": "^4.1.18",
     "vite": "^7.2.4",
     "vite-plugin-vue-devtools": "^8.0.5"
   }
