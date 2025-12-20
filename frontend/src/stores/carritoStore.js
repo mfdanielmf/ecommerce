@@ -5,7 +5,7 @@ import { toast } from 'vue-sonner'
 
 const IMG_URL = 'https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp'
 
-export const carritoStore = defineStore('carrito', () => {
+export const carritoStore = defineStore('carrito_techstore', () => {
   const carrito = useLocalStorage('carrito_techstore', [])
 
   function encontrarProducto(id) {
@@ -24,6 +24,7 @@ export const carritoStore = defineStore('carrito', () => {
         precio: producto.precio,
         cantidad: cantidad,
         img_url: foto,
+        stock: producto.stock,
       })
     }
 
@@ -38,5 +39,19 @@ export const carritoStore = defineStore('carrito', () => {
     return 0
   })
 
-  return { carrito, encontrarProducto, añadirProducto, cantidadTotalProductos }
+  function eliminarProductoCarrito(id) {
+    const producto = encontrarProducto(id)
+
+    if (!producto) return
+
+    carrito.value = carrito.value.filter((prod) => prod.id !== id)
+  }
+
+  return {
+    carrito,
+    encontrarProducto,
+    añadirProducto,
+    cantidadTotalProductos,
+    eliminarProductoCarrito,
+  }
 })
