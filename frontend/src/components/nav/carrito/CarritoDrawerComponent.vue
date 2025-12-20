@@ -2,6 +2,7 @@
 import { ShoppingCartIcon } from 'lucide-vue-next'
 import { carritoStore } from '@/stores/carritoStore'
 import CarritoVacíoContent from './CarritoVacioContent.vue'
+import CarritoContentComponent from './CarritoContentComponent.vue'
 
 const almacenCarrito = carritoStore()
 </script>
@@ -32,7 +33,7 @@ const almacenCarrito = carritoStore()
       </div>
 
       <div v-else class="menu bg-base-200 min-h-full w-xl">
-        <h1>test</h1>
+        <CarritoContentComponent />
       </div>
     </div>
   </div>

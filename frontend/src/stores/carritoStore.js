@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { toast } from 'vue-sonner'
 
+const IMG_URL = 'https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp'
+
 export const carritoStore = defineStore('carrito', () => {
   const carrito = useLocalStorage('carrito_techstore', [])
 
@@ -10,7 +12,7 @@ export const carritoStore = defineStore('carrito', () => {
     return carrito.value.find((productoActual) => productoActual.id === id)
   }
 
-  function añadirProducto(producto, cantidad) {
+  function añadirProducto(producto, cantidad, foto = IMG_URL) {
     const productoExistente = encontrarProducto(producto.id)
 
     if (productoExistente) {
@@ -21,6 +23,7 @@ export const carritoStore = defineStore('carrito', () => {
         nombre: producto.nombre,
         precio: producto.precio,
         cantidad: cantidad,
+        img_url: foto,
       })
     }
 
