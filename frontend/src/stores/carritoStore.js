@@ -47,11 +47,23 @@ export const carritoStore = defineStore('carrito_techstore', () => {
     carrito.value = carrito.value.filter((prod) => prod.id !== id)
   }
 
+  const precioTotalCarrito = computed(() => {
+    return carrito.value
+      .reduce((total, producto) => {
+        return total + producto.precio * producto.cantidad
+      }, 0)
+      .toLocaleString('es', {
+        style: 'currency',
+        currency: 'EUR',
+      })
+  })
+
   return {
     carrito,
     encontrarProducto,
     añadirProducto,
     cantidadTotalProductos,
     eliminarProductoCarrito,
+    precioTotalCarrito,
   }
 })

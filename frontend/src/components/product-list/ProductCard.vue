@@ -15,9 +15,12 @@ const productoLocalStorage = computed(() => {
 })
 
 const añadirProductoCarrito = () => {
-  if (productoLocalStorage.value && productoLocalStorage.value.cantidad + 1 > props.producto.stock)
+  if (
+    productoLocalStorage.value &&
+    productoLocalStorage.value.cantidad + 1 > productoLocalStorage.value.stock
+  )
     return toast.error('¡No puedes añadir tantos productos!', {
-      description: `MAX: ${props.producto.stock} En tu carrito: ${productoLocalStorage.value.cantidad}`,
+      description: `MAX: ${productoLocalStorage.value.stock} En tu carrito: ${productoLocalStorage.value.cantidad}`,
     })
 
   carritoStore().añadirProducto(props.producto, 1)

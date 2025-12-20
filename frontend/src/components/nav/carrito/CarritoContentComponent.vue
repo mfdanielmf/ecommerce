@@ -26,7 +26,10 @@ function sumarCantidad(producto) {
 <template>
   <div class="p-4 mb-4 tracking-wide border-b border-neutral-300">
     <h1 class="text-xl font-semibold text-blue-700 mb-2">TechStore</h1>
-    <p class="text-xs opacity-60">{{ store.cantidadTotalProductos }} productos</p>
+    <div class="flex justify-between items-center">
+      <p class="text-xs opacity-60">{{ store.cantidadTotalProductos }} productos</p>
+      <p>Precio total: {{ store.precioTotalCarrito }}</p>
+    </div>
   </div>
 
   <ul class="list bg-base-100 rounded-box shadow-md overflow-auto">
@@ -71,4 +74,6 @@ function sumarCantidad(producto) {
       </div>
     </li>
   </ul>
+
+  <button class="btn btn-primary mt-5">Finalizar Compra</button>
 </template>
