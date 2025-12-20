@@ -1,5 +1,7 @@
 <script setup>
 import { carritoStore } from '@/stores/carritoStore'
+import { computed } from 'vue'
+import { toast } from 'vue-sonner'
 
 const props = defineProps({
   producto: {
@@ -8,7 +10,16 @@ const props = defineProps({
   },
 })
 
+const productoLocalStorage = computed(() => {
+  return carritoStore().encontrarProducto(props.producto.id)
+})
+
 const añadirProductoCarrito = () => {
+  if (productoLocalStorage.value && productoLocalStorage.value.cantidad + 1 > props.producto.stock)
+    return toast.error('¡No puedes añadir tantos productos!', {
+      description: `MAX: ${props.producto.stock} En tu carrito: ${productoLocalStorage.value.cantidad}`,
+    })
+
   carritoStore().añadirProducto(props.producto, 1)
 }
 </script>
