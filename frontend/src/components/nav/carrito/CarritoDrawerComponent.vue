@@ -1,5 +1,5 @@
 <script setup>
-import { ShoppingCartIcon } from 'lucide-vue-next'
+import { ShoppingCartIcon, XIcon } from 'lucide-vue-next'
 import { carritoStore } from '@/stores/carritoStore'
 import CarritoVacíoContent from './CarritoVacioContent.vue'
 import CarritoContentComponent from './CarritoContentComponent.vue'
@@ -25,15 +25,17 @@ const almacenCarrito = carritoStore()
         aria-label="close sidebar"
         class="drawer-overlay cursor-default"
       ></label>
-      <div
-        v-if="!almacenCarrito.carrito.length"
-        class="menu bg-base-200 min-h-full w-xl p-4 grid place-content-center text-center"
-      >
-        <CarritoVacíoContent />
-      </div>
 
-      <div v-else class="menu bg-base-200 min-h-full w-xl">
-        <CarritoContentComponent />
+      <div
+        class="menu bg-base-200 min-h-full w-xl"
+        :class="{ 'grid place-content-center text-center': !almacenCarrito.carrito.length }"
+      >
+        <label for="my-drawer-5" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
+          <XIcon />
+        </label>
+
+        <CarritoVacíoContent v-if="!almacenCarrito.carrito.length" />
+        <CarritoContentComponent v-else />
       </div>
     </div>
   </div>
