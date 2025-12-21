@@ -13,6 +13,11 @@ const props = defineProps({
 
 <template>
   <div class="rounded-2xl overflow-hidden">
-    <img :src="props.img_url" :alt="props.alt" class="w-full h-full bg-cover" />
+    <img
+      :src="props.img_url"
+      :alt="props.alt"
+      class="w-full h-full bg-cover"
+      fetchpriority="high"
+    />
   </div>
 </template>

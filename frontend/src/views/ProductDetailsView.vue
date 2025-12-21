@@ -1,10 +1,11 @@
 <script setup>
 import { productStore } from '@/stores/productosStore'
-import { computed, onMounted } from 'vue'
+import { computed, defineAsyncComponent, onMounted } from 'vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import ErrorMessage from '@/components/common/ErrorMessage.vue'
 import ImgComponent from '@/components/product-details/ImgComponent.vue'
 import DetailsBodyComponent from '@/components/product-details/DetailsBodyComponent.vue'
+
+const ErrorMessage = defineAsyncComponent(() => import('@/components/common/ErrorMessage.vue'))
 
 const props = defineProps({
   id: {

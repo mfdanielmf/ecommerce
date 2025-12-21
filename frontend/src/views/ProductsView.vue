@@ -2,8 +2,9 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import ProductCard from '@/components/product-list/ProductCard.vue'
 import { productStore } from '@/stores/productosStore'
-import { onMounted } from 'vue'
-import ErrorMessage from '@/components/common/ErrorMessage.vue'
+import { defineAsyncComponent, onMounted } from 'vue'
+
+const ErrorMessage = defineAsyncComponent(() => import('@/components/common/ErrorMessage.vue'))
 
 const productosStore = productStore()
 

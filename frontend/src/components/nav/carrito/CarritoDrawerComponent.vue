@@ -18,7 +18,7 @@ const drawerAbierto = ref(false)
       <!-- Page content here -->
       <label for="my-drawer-5" class="indicator drawer-button cursor-pointer">
         <ShoppingCartIcon :size="20" />
-        <span class="badge badge-sm rounded-full indicator-item">{{
+        <span class="badge badge-sm bg-red-300 border-none rounded-full indicator-item">{{
           almacenCarrito.cantidadTotalProductos
         }}</span>
       </label>
