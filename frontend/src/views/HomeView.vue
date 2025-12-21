@@ -56,6 +56,7 @@ import BlackButton from '@/components/common/BlackButton.vue'
               src="../assets/img/main-image.jpeg"
               alt="Foto landing"
               class="w-full h-full object-cover"
+              fetchpriority="high"
             />
           </div>
         </div>

@@ -1,0 +1,69 @@
+import { useLocalStorage } from '@vueuse/core'
+import { defineStore } from 'pinia'
+import { computed } from 'vue'
+import { toast } from 'vue-sonner'
+
+const IMG_URL = 'https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp'
+
+export const carritoStore = defineStore('carrito_techstore', () => {
+  const carrito = useLocalStorage('carrito_techstore', [])
+
+  function encontrarProducto(id) {
+    return carrito.value.find((productoActual) => productoActual.id === id)
+  }
+
+  function añadirProducto(producto, cantidad, foto = IMG_URL) {
+    const productoExistente = encontrarProducto(producto.id)
+
+    if (productoExistente) {
+      productoExistente.cantidad += cantidad
+    } else {
+      carrito.value.push({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        cantidad: cantidad,
+        img_url: foto,
+        stock: producto.stock,
+      })
+    }
+
+    toast.success(`¡Se ha añadido el producto ${producto.nombre} al carrito!`)
+  }
+
+  const cantidadTotalProductos = computed(() => {
+    if (carrito.value.length) {
+      return carrito.value.reduce((total, productoActual) => total + productoActual.cantidad, 0)
+    }
+
+    return 0
+  })
+
+  function eliminarProductoCarrito(id) {
+    const producto = encontrarProducto(id)
+
+    if (!producto) return
+
+    carrito.value = carrito.value.filter((prod) => prod.id !== id)
+  }
+
+  const precioTotalCarrito = computed(() => {
+    return carrito.value
+      .reduce((total, producto) => {
+        return total + producto.precio * producto.cantidad
+      }, 0)
+      .toLocaleString('es', {
+        style: 'currency',
+        currency: 'EUR',
+      })
+  })
+
+  return {
+    carrito,
+    encontrarProducto,
+    añadirProducto,
+    cantidadTotalProductos,
+    eliminarProductoCarrito,
+    precioTotalCarrito,
+  }
+})

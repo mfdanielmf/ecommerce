@@ -1,10 +1,30 @@
 <script setup>
-defineProps({
+import { carritoStore } from '@/stores/carritoStore'
+import { computed } from 'vue'
+import { toast } from 'vue-sonner'
+
+const props = defineProps({
   producto: {
     type: Object,
     required: true,
   },
 })
+
+const productoLocalStorage = computed(() => {
+  return carritoStore().encontrarProducto(props.producto.id)
+})
+
+const añadirProductoCarrito = () => {
+  if (
+    productoLocalStorage.value &&
+    productoLocalStorage.value.cantidad + 1 > productoLocalStorage.value.stock
+  )
+    return toast.error('¡No puedes añadir tantos productos!', {
+      description: `MAX: ${productoLocalStorage.value.stock} En tu carrito: ${productoLocalStorage.value.cantidad}`,
+    })
+
+  carritoStore().añadirProducto(props.producto, 1)
+}
 </script>
 
 <template>
@@ -21,7 +41,9 @@ defineProps({
       <p class="h-15 overflow-hidden">{{ producto.descripcion }}</p>
       <div class="card-actions justify-between items-center">
         <p class="font-semibold text-xl">{{ producto.precio }} €</p>
-        <button class="btn btn-primary" @click.stop.prevent>Añadir al carrito</button>
+        <button class="btn btn-primary" @click.stop.prevent="añadirProductoCarrito">
+          Añadir al carrito
+        </button>
       </div>
     </div>
   </RouterLink>
