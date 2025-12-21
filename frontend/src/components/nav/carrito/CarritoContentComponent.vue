@@ -1,8 +1,10 @@
 <script setup>
-import VaciarCarritoDialog from '@/components/nav/carrito/VaciarCarritoDialog.vue'
 import { carritoStore } from '@/stores/carritoStore'
 import { PlusIcon, MinusIcon, Trash2 } from 'lucide-vue-next'
+import { defineAsyncComponent } from 'vue'
 import { toast } from 'vue-sonner'
+
+const VaciarCarritoDialog = defineAsyncComponent(() => import('./VaciarCarritoDialog.vue'))
 
 const store = carritoStore()
 
@@ -43,7 +45,7 @@ function vaciarCarrito() {
       <div
         class="flex items-center justify-center bg-transparent shadow-none cursor-default active:text-black"
       >
-        <img class="rounded-box" :src="producto.img_url" width="80" height="80" />
+        <img class="rounded-box" :src="producto.img_url" width="80" height="80" loading="lazy" />
       </div>
 
       <p class="flex self-center bg-transparent shadow-none cursor-default">
