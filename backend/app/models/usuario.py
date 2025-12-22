@@ -21,3 +21,12 @@ class Usuario(db.Model):
 
     def comprobar_contraseña(self, contraseña: str) -> bool:
         return check_password_hash(self.contraseña, contraseña)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "correo": self.correo,
+            "rol": self.rol,
+            "fecha_creacion": self.fecha_creacion
+        }

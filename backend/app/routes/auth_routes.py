@@ -1,4 +1,8 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
+from app.repositories.user_repo import insert_user
+from app.services.auth_services import validar_usuario
+from app.models.exceptions import ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -9,5 +13,36 @@ def login():
 
 
 @auth_bp.route("/register", methods=["POST"])
+@cross_origin()
 def register():
-    pass
+    data = request.get_json()
+
+    if not data or not data["nombre"] or not data["correo"] or not data["contraseña"] or not data["contraseña_repetir"]:
+        return jsonify({"error": "Faltan datos en la petición"}), 400
+
+    nombre: str = data["nombre"]
+    correo: str = data["correo"]
+    contraseña: str = data["contraseña"]
+    contraseña_repetir = data["contraseña_repetir"]
+
+    try:
+        usuario = validar_usuario(
+            nombre, correo, contraseña, contraseña_repetir)
+
+        usuario_insertado = insert_user(usuario)
+
+        return jsonify({
+            "msg": "Usuario registrado correctamente",
+            "usuario": usuario_insertado.to_dict()
+        }), 200
+
+    except LongitudNombreIncorrectaException:
+        return jsonify({"error": "Longitud del nombre incorrecta"}), 422
+    except NombreYaUsadoException:
+        return jsonify({"error": "El nombre ya está en uso"}), 409
+    except CorreoYaUsadoException:
+        return jsonify({"error": "El correo ya está en uso"}), 409
+    except LongitudContraseñaIncorrectaException:
+        return jsonify({"error": "Longitud de la contraseña incorrecta"}), 422
+    except ContraseñasDiferentesException:
+        return jsonify({"error": "Las contraseñas no son iguales"}), 422
