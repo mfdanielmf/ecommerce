@@ -1,6 +1,6 @@
-import { getProductoId, getProductos } from '@/api/productos'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import productosApi from '@/api/productosApi'
 
 export const productStore = defineStore('productos', () => {
   const productos = ref({})
@@ -14,8 +14,8 @@ export const productStore = defineStore('productos', () => {
 
     cargando.value = true
     try {
-      const productosFetch = await getProductos()
-      productosFetch.products.forEach((p) => {
+      const productosFetch = await productosApi.getProductos()
+      productosFetch.data.products.forEach((p) => {
         productos.value[p.id] = p
       })
       listaCargada.value = true
@@ -36,8 +36,8 @@ export const productStore = defineStore('productos', () => {
 
     cargando.value = true
     try {
-      const productoFetch = await getProductoId(id)
-      productos.value[productoFetch.producto.id] = productoFetch.producto
+      const productoFetch = await productosApi.getProductoId(id)
+      productos.value[productoFetch.data.producto.id] = productoFetch.data.producto
     } catch {
       error.value = `Error al obtener el producto con ID ${id}`
     } finally {
