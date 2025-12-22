@@ -64,7 +64,7 @@ const onSubmit = handleSubmit((data) => {
     </div>
 
     <button type="submit" class="btn btn-primary w-full mt-4" :disabled="isSubmitting">
-      Iniciar sesión
+      {{ isSubmitting ? 'Cargando...' : 'Iniciar sesión' }}
     </button>
   </form>
 </template>
