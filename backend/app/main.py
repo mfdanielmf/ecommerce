@@ -1,16 +1,22 @@
 from decimal import Decimal
 import os
 
+from flask_migrate import Migrate
+
 from app.db.db import db
 from app.models.producto import Producto
+from app.models.usuario import Usuario
+
 from app.routes.product_routes import producto_bp
 from app.routes.health_route import health_bp
+from app.routes.auth_routes import auth_bp
 from flask import Flask
 
 app = Flask(__name__)
 
 app.register_blueprint(producto_bp, url_prefix="/api/productos")
 app.register_blueprint(health_bp, url_prefix="/api/health")
+app.register_blueprint(auth_bp, url_prefix="/auth")
 
 app.secret_key = "Me da igual que veas la secret key de desarrollo"
 
@@ -22,6 +28,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
+migrate = Migrate(app, db)
 
 
 @app.cli.command("crear-tablas")
