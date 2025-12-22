@@ -1,5 +1,4 @@
 <script setup>
-import BlackButton from '../common/BlackButton.vue'
 import { LogInIcon } from 'lucide-vue-next'
 import CarritoDrawerComponent from './carrito/CarritoDrawerComponent.vue'
 </script>
@@ -10,9 +9,12 @@ import CarritoDrawerComponent from './carrito/CarritoDrawerComponent.vue'
 
     <div class="h-5 w-px bg-neutral-300 mx-1"></div>
 
-    <BlackButton class="group flex items-center gap-2.5">
+    <RouterLink
+      :to="{ name: 'login' }"
+      class="group flex items-center btn bg-neutral-900 text-white border-none hover:bg-neutral-800"
+    >
       <LogInIcon class="group-hover:translate-x-1 transition" />
       <p>Iniciar sesión</p>
-    </BlackButton>
+    </RouterLink>
   </div>
 </template>
