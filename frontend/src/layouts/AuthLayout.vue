@@ -10,7 +10,7 @@ const esLogin = computed(() => {
 </script>
 
 <template>
-  <section class="flex flex-col items-center justify-center min-h-screen">
+  <section class="flex flex-col items-center justify-center min-h-screen mx-5">
     <div class="bg-white p-10 rounded-md shadow-xl w-full max-w-143.5">
       <div class="text-center">
         <h1 class="mb-1 font-semibold text-3xl text-blue-600">
