@@ -21,9 +21,9 @@ const esLogin = computed(() => {
         </p>
       </div>
 
-      <form class="mt-8 flex flex-col">
+      <main class="mt-8">
         <RouterView />
-      </form>
+      </main>
 
       <p class="text-center mt-4">
         {{ esLogin ? '¿Todavía no tienes una cuenta?' : '¿Ya tienes una cuenta?' }}
