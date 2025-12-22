@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.db.db import db
 
@@ -14,7 +14,8 @@ class Producto(db.Model):
     precio = Column(DECIMAL(precision=10, scale=2), nullable=False)
     stock = Column(Integer, default=0, nullable=False)
     img_url = Column(String(500), nullable=True)
-    fecha_creacion = Column(DateTime, default=datetime.now, nullable=False)
+    fecha_creacion = Column(
+        DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     def to_dict(self):
         return {
