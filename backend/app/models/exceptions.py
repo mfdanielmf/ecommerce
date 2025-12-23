@@ -20,3 +20,11 @@ class CorreoYaUsadoException(Exception):
 
 class LongitudContraseñaIncorrectaException(Exception):
     pass
+
+
+class UsuarioNoEncontradoException(Exception):
+    pass
+
+
+class ContraseñaIncorrectaException(Exception):
+    pass
