@@ -12,7 +12,7 @@ auth_bp = Blueprint("auth", __name__)
 def login():
     data = request.get_json()
 
-    if not data["nombre"] or not data["contraseña"]:
+    if not data or not data.get("nombre") or not data.get("contraseña"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
     try:
@@ -34,7 +34,7 @@ def login():
 def register():
     data = request.get_json()
 
-    if not data or not data["nombre"] or not data["correo"] or not data["contraseña"] or not data["contraseña_repetir"]:
+    if not data or not data.get("nombre") or not data.get("correo") or not data.get("contraseña") or not data.get("contraseña_repetir"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
     nombre: str = data["nombre"]
