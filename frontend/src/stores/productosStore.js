@@ -38,8 +38,8 @@ export const productStore = defineStore('productos', () => {
     try {
       const productoFetch = await productosApi.getProductoId(id)
       productos.value[productoFetch.data.producto.id] = productoFetch.data.producto
-    } catch {
-      error.value = `Error al obtener el producto con ID ${id}`
+    } catch (e) {
+      error.value = e.response?.data?.error || `Error al obtener el producto con ID ${id}`
     } finally {
       cargando.value = false
     }

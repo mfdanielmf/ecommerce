@@ -2,6 +2,8 @@
 import { CircleXIcon } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
+import authApi from '@/api/authApi'
+import { toast } from 'vue-sonner'
 
 const schema = yup.object({
   nombre: yup
@@ -32,8 +34,16 @@ const [correo, correoProps] = defineField('correo')
 const [contraseña, contraseñaProps] = defineField('contraseña')
 const [contraseñaRepetir, contraseñaRepetirProps] = defineField('contraseña_repetir')
 
-const onSubmit = handleSubmit((data) => {
-  console.log(data)
+const onSubmit = handleSubmit(async (data) => {
+  try {
+    const req = await authApi.registrarUsuario(data)
+
+    toast.success(req.data.msg || 'Has iniciado sesión correctamente')
+  } catch (e) {
+    toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
+      position: 'top-right',
+    })
+  }
 })
 </script>
 
@@ -108,6 +118,7 @@ const onSubmit = handleSubmit((data) => {
     </div>
 
     <button type="submit" class="btn btn-primary w-full mt-4" :disabled="isSubmitting">
+      <span class="loading loading-spinner" v-if="isSubmitting"></span>
       {{ isSubmitting ? 'Cargando...' : 'Registrarse' }}
     </button>
   </form>
