@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from app.config import config
 
 from app.routes.product_routes import producto_bp
@@ -19,6 +20,7 @@ app.config.from_object(config["desarrollo"])
 
 db.init_app(app)
 migrate = Migrate(app, db)
+jwt = JWTManager(app)
 
 
 app.register_blueprint(producto_bp, url_prefix="/api/productos")

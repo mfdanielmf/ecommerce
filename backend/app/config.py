@@ -7,12 +7,14 @@ load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.getenv("secret_key_dev")
+    SECRET_KEY = os.getenv("SECRET_KEY_DEV")
 
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
     db_path = os.path.join(base_dir, "db", "store.db")
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{db_path}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 
 class Desarrollo(Config):
