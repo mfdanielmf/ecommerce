@@ -38,7 +38,7 @@ const onSubmit = handleSubmit(async (data) => {
   try {
     const req = await authApi.registrarUsuario(data)
 
-    toast.success(req.data.msg || 'Has iniciado sesión correctamente')
+    toast.success(req.data.msg || 'Te has registrado correctamente')
   } catch (e) {
     toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
       position: 'top-right',
