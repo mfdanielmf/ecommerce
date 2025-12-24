@@ -3,6 +3,7 @@ import { LogInIcon } from 'lucide-vue-next'
 import CarritoDrawerComponent from './carrito/CarritoDrawerComponent.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { defineAsyncComponent } from 'vue'
+import LoadingSpinner from '../common/LoadingSpinner.vue'
 
 const AvatarComponent = defineAsyncComponent(() => import('./AvatarComponent.vue'))
 
@@ -15,8 +16,10 @@ const authStore = useAuthStore()
 
     <div class="h-5 w-px bg-neutral-300 mx-1"></div>
 
+    <LoadingSpinner v-if="authStore.cargandoUsuario" />
+
     <RouterLink
-      v-if="!authStore.usuario"
+      v-else-if="!authStore.usuario"
       :to="{ name: 'login' }"
       class="group flex items-center btn bg-neutral-900 text-white border-none hover:bg-neutral-800"
     >
