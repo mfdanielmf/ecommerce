@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, make_response, request
 from flask_cors import cross_origin
 import jwt
 from app.repositories.user_repo import insert_user
-from app.services.auth_services import validar_usuario, comprobar_login
+from app.services.auth_services import comprobar_token, validar_usuario, comprobar_login
 from app.models.exceptions import ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
 
 auth_bp = Blueprint("auth", __name__)
@@ -86,3 +86,16 @@ def register():
         return jsonify({"error": "Longitud de la contraseña incorrecta"}), 422
     except ContraseñasDiferentesException:
         return jsonify({"error": "Las contraseñas no son iguales"}), 422
+
+
+@auth_bp.route("/me")
+@cross_origin(supports_credentials=True)
+def me():
+    token = request.cookies.get("access_token")
+
+    if not token:
+        return jsonify({"error": "No hay ninguna sesión activa"}), 401
+
+    resp, status = comprobar_token(token)
+
+    return jsonify(resp), status
