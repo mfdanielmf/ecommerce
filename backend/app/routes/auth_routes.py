@@ -1,5 +1,8 @@
-from flask import Blueprint, jsonify, request
+import datetime
+import os
+from flask import Blueprint, jsonify, make_response, request
 from flask_cors import cross_origin
+import jwt
 from app.repositories.user_repo import insert_user
 from app.services.auth_services import validar_usuario, comprobar_login
 from app.models.exceptions import ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
@@ -8,7 +11,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/login", methods=["POST"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def login():
     data = request.get_json()
 
@@ -18,7 +21,27 @@ def login():
     try:
         usuario = comprobar_login(data["nombre"], data["contraseña"])
 
-        return jsonify({"msg": "Has iniciado sesión correctamente", "usuario": usuario.to_dict()}), 200
+        payload = {
+            'id': usuario.id,
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.now(datetime.timezone.utc)
+        }
+
+        token = jwt.encode(payload, os.getenv(
+            "JWT_SECRET_KEY"), algorithm="HS256")
+
+        response_data = {
+            "msg": "Has iniciado sesión correctamente",
+            "token": token,
+            "usuario": usuario.to_dict()
+        }
+
+        response = make_response(jsonify(response_data), 200)
+        response.set_cookie(key="access_token", value=token,
+                            httponly=True, max_age=3600)
+
+        return response
+
     except LongitudNombreIncorrectaException:
         return jsonify({"error": "Longitud del nombre incorrecta"}), 422
     except LongitudContraseñaIncorrectaException:
