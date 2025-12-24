@@ -6,7 +6,9 @@ import authApi from '@/api/authApi'
 import { toast } from 'vue-sonner'
 import router from '@/router'
 import { onMounted, ref } from 'vue'
-import { authStore } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
+
+const authStore = useAuthStore()
 
 const nombreInput = ref(null)
 
@@ -49,7 +51,7 @@ const onSubmit = handleSubmit(async (data) => {
 
     toast.success(req.data.msg || 'Te has registrado correctamente')
 
-    authStore().nombreUsuarioTemporal = req.data.usuario.nombre
+    authStore.nombreUsuarioTemporal = req.data.usuario.nombre
 
     await router.push({ name: 'login' })
   } catch (e) {
