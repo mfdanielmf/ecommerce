@@ -4,6 +4,11 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import authApi from '@/api/authApi'
 import { toast } from 'vue-sonner'
+import { authStore } from '@/stores/authStore'
+import { onMounted, ref } from 'vue'
+
+const inputUsuario = ref(null)
+const inputContraseña = ref(null)
 
 const schema = yup.object({
   nombre: yup
@@ -24,6 +29,20 @@ const { defineField, handleSubmit, errors, isSubmitting } = useForm({
 const [nombreUsuario, nombreUsuarioProps] = defineField('nombre')
 const [contraseña, contraseñaProps] = defineField('contraseña')
 
+onMounted(() => {
+  const usuarioAuth = authStore().nombreUsuarioTemporal
+
+  if (!usuarioAuth) {
+    inputUsuario.value?.focus()
+
+    return
+  }
+
+  nombreUsuario.value = usuarioAuth
+  inputContraseña.value?.focus()
+  authStore().nombreUsuarioTemporal = null
+})
+
 const onSubmit = handleSubmit(async (data) => {
   try {
     const req = await authApi.iniciarSesion(data)
@@ -42,6 +61,7 @@ const onSubmit = handleSubmit(async (data) => {
     <div class="flex flex-col">
       <label for="nombre">Usuario</label>
       <input
+        ref="inputUsuario"
         type="text"
         name="usuario"
         id="nombre"
@@ -59,6 +79,7 @@ const onSubmit = handleSubmit(async (data) => {
     <div class="flex flex-col mt-4">
       <label for="contraseña">Contraseña</label>
       <input
+        ref="inputContraseña"
         type="password"
         name="contraseña"
         id="contraseña"
