@@ -45,17 +45,17 @@ def comprobar_login(nombre: str, contraseña: str) -> Usuario | LongitudNombreIn
 def comprobar_token(token: str) -> tuple[dict[str, any], int]:
     try:
         payload = jwt.decode(token, os.getenv(
-            "JWT_SECRET_KEY"), algorithm=["HS256"])
+            "JWT_SECRET_KEY"), algorithms=["HS256"])
 
         usuario = find_user_id(payload['id'])
 
         if not usuario:
             return {"error": "El usuario no existe"}, 401
 
-        return {"usuario": usuario.to_dict()}
+        return {"usuario": usuario.to_dict()}, 200
     except jwt.ExpiredSignatureError:
         return {"error": "La sesión ha expirado"}, 401
-    except jwt.InvalidTokenError:
-        return {"error": "Token inválido"}, 401
+    except jwt.InvalidTokenError as e:
+        return {"error": f"Token inválido: {str(e)}"}, 401
     except Exception:
         return {"error": "Error interno"}, 500
