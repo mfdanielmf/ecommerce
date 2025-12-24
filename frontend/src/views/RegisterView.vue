@@ -4,6 +4,10 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import authApi from '@/api/authApi'
 import { toast } from 'vue-sonner'
+import router from '@/router'
+import { onMounted, ref } from 'vue'
+
+const nombreInput = ref(null)
 
 const schema = yup.object({
   nombre: yup
@@ -34,11 +38,17 @@ const [correo, correoProps] = defineField('correo')
 const [contraseña, contraseñaProps] = defineField('contraseña')
 const [contraseñaRepetir, contraseñaRepetirProps] = defineField('contraseña_repetir')
 
+onMounted(() => {
+  nombreInput.value?.focus()
+})
+
 const onSubmit = handleSubmit(async (data) => {
   try {
     const req = await authApi.registrarUsuario(data)
 
     toast.success(req.data.msg || 'Te has registrado correctamente')
+
+    await router.push({ name: 'login' })
   } catch (e) {
     toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
       position: 'top-right',
@@ -52,6 +62,7 @@ const onSubmit = handleSubmit(async (data) => {
     <div class="flex flex-col">
       <label for="nombre">Usuario</label>
       <input
+        ref="nombreInput"
         type="text"
         name="nombre"
         id="nombre"

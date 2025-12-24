@@ -5,6 +5,6 @@ export default {
     return api().post('/auth/register', data)
   },
   iniciarSesion(data) {
-    return api().post('/auth/login', data)
+    return api().post('/auth/login', data, { withCredentials: true })
   },
 }
