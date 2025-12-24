@@ -2,10 +2,10 @@
 import { LogInIcon } from 'lucide-vue-next'
 import CarritoDrawerComponent from './carrito/CarritoDrawerComponent.vue'
 import { useAuthStore } from '@/stores/authStore'
-import { defineAsyncComponent } from 'vue'
 import LoadingSpinner from '../common/LoadingSpinner.vue'
+import { defineAsyncComponent } from 'vue'
 
-const AvatarComponent = defineAsyncComponent(() => import('./AvatarComponent.vue'))
+const ProfileComponent = defineAsyncComponent(() => import('./ProfileComponent.vue'))
 
 const authStore = useAuthStore()
 </script>
@@ -27,6 +27,6 @@ const authStore = useAuthStore()
       <p>Iniciar sesión</p>
     </RouterLink>
 
-    <AvatarComponent v-else :nombre="authStore.usuario.nombre[0]" />
+    <ProfileComponent v-else :nombre="authStore.usuario.nombre[0]" />
   </div>
 </template>
