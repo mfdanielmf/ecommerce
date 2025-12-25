@@ -1,27 +1,33 @@
-from decimal import Decimal
-import os
+from flask import Flask
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from app.config import config
 
-from app.db.db import db
-from app.models.producto import Producto
 from app.routes.product_routes import producto_bp
 from app.routes.health_route import health_bp
-from flask import Flask
+from app.routes.auth_routes import auth_bp
+
+from decimal import Decimal
+
+from app.db.db import db
+from flask_migrate import Migrate
+
+from app.models.producto import Producto
+from app.models.usuario import Usuario
 
 app = Flask(__name__)
 
-app.register_blueprint(producto_bp, url_prefix="/api/productos")
-app.register_blueprint(health_bp, url_prefix="/api/health")
-
-app.secret_key = "Me da igual que veas la secret key de desarrollo"
-
-# SQLAlchemy config
-base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-db_path = os.path.join(base_dir, "db", "store.db")
-
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config.from_object(config["desarrollo"])
 
 db.init_app(app)
+migrate = Migrate(app, db)
+jwt = JWTManager(app)
+CORS(app, origins="http://localhost:5173", supports_credentials=True)
+
+
+app.register_blueprint(producto_bp, url_prefix="/api/productos")
+app.register_blueprint(health_bp, url_prefix="/api/health")
+app.register_blueprint(auth_bp, url_prefix="/auth")
 
 
 @app.cli.command("crear-tablas")
@@ -75,4 +81,4 @@ def crear_tablas():
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', 8080, debug=True)
+    app.run('0.0.0.0', 8080)

@@ -1,7 +1,7 @@
 <script setup>
-import NavStartComponent from './NavStartComponent.vue';
-import NavCenterComponent from './NavCenterComponent.vue';
-import NavEndComponent from './NavEndComponent.vue';
+import NavStartComponent from './nav-start/NavStartComponent.vue'
+import NavCenterComponent from './nav-center/NavCenterComponent.vue'
+import NavEndComponent from './nav-end/NavEndComponent.vue'
 </script>
 
 <template>
