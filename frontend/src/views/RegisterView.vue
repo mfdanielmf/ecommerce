@@ -2,9 +2,6 @@
 import { CircleXIcon } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import authApi from '@/api/authApi'
-import { toast } from 'vue-sonner'
-import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -46,19 +43,7 @@ onMounted(() => {
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  try {
-    const req = await authApi.registrarUsuario(data)
-
-    toast.success(req.data.msg || 'Te has registrado correctamente')
-
-    authStore.nombreUsuarioTemporal = req.data.usuario.nombre
-
-    await router.push({ name: 'login' })
-  } catch (e) {
-    toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
-      position: 'top-right',
-    })
-  }
+  await authStore.registrarUsuario(data)
 })
 </script>
 

@@ -2,10 +2,7 @@
 import { CircleXIcon } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import authApi from '@/api/authApi'
-import { toast } from 'vue-sonner'
 import { onMounted, ref } from 'vue'
-import router from '@/router'
 import { useAuthStore } from '@/stores/authStore'
 
 const authStore = useAuthStore()
@@ -44,19 +41,7 @@ onMounted(() => {
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  try {
-    const req = await authApi.iniciarSesion(data)
-
-    toast.success(req.data.msg || 'Has iniciado sesión correctamente')
-
-    authStore.usuario = req.data.usuario
-
-    await router.push({ name: 'lista_productos' })
-  } catch (e) {
-    toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
-      position: 'top-right',
-    })
-  }
+  await authStore.iniciarSesion(data)
 })
 </script>
 
