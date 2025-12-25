@@ -1,7 +1,7 @@
 import datetime
 import os
 from flask import Blueprint, jsonify, make_response, request
-from flask_cors import cross_origin
+from flask_jwt_extended import jwt_required, unset_jwt_cookies
 import jwt
 from app.repositories.user_repo import insert_user
 from app.services.auth_services import comprobar_token, validar_usuario, comprobar_login
@@ -11,7 +11,6 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/login", methods=["POST"])
-@cross_origin(supports_credentials=True)
 def login():
     data = request.get_json()
 
@@ -53,7 +52,6 @@ def login():
 
 
 @auth_bp.route("/register", methods=["POST"])
-@cross_origin()
 def register():
     data = request.get_json()
 
@@ -89,7 +87,6 @@ def register():
 
 
 @auth_bp.route("/me")
-@cross_origin(supports_credentials=True)
 def me():
     token = request.cookies.get("access_token")
 
@@ -99,3 +96,13 @@ def me():
     resp, status = comprobar_token(token)
 
     return jsonify(resp), status
+
+
+@auth_bp.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    # Devuelve 401 con un msg cuando no hay token
+    resp = make_response(jsonify({"msg": "Sesión cerrada con éxito"}), 200)
+    unset_jwt_cookies(resp)
+
+    return resp
