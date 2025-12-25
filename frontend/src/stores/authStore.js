@@ -41,5 +41,29 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { nombreUsuarioTemporal, usuario, cargandoUsuario, iniciarSesion, registrarUsuario }
+  async function cerrarSesion() {
+    cargandoUsuario.value = true
+    try {
+      const req = await authApi.cerrarSesion()
+
+      toast.success(req.data.msg)
+
+      usuario.value = null
+
+      await router.push({ name: 'login' })
+    } catch {
+      toast.error('Ha ocurrido un error al cerrar sesión')
+    } finally {
+      cargandoUsuario.value = false
+    }
+  }
+
+  return {
+    nombreUsuarioTemporal,
+    usuario,
+    cargandoUsuario,
+    iniciarSesion,
+    registrarUsuario,
+    cerrarSesion,
+  }
 })

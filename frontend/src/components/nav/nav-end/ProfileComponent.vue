@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from 'radix-vue'
 import { LogOutIcon } from 'lucide-vue-next'
+import { useAuthStore } from '@/stores/authStore'
 
 const props = defineProps({
   nombre: {
@@ -17,13 +18,17 @@ const props = defineProps({
 })
 
 const toggleState = ref(false)
+
+async function handleLogout() {
+  await useAuthStore().cerrarSesion()
+}
 </script>
 
 <template>
   <DropdownMenuRoot v-model:open="toggleState">
     <DropdownMenuTrigger
       class="avatar avatar-online avatar-placeholder cursor-pointer"
-      aria-label="Customise options"
+      aria-label="Opciones perfil"
     >
       <div class="bg-neutral text-neutral-content w-10 rounded-full">
         <span class="text-md">{{ props.nombre }}</span>
@@ -38,6 +43,7 @@ const toggleState = ref(false)
         <DropdownMenuItem
           value="Cerrar sesion"
           class="cursor-pointer text-[13px] leading-none text-red-500 font-semibold rounded-[3px] flex items-center gap-1 h-6.25 px-2 select-none outline-none data-disabled:pointer-events-none data-highlighted:bg-neutral-200 data-highlighted:text-red-600 transition-colors"
+          @click="handleLogout"
         >
           <LogOutIcon :size="20" />
           Cerrar sesión
