@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 
 from dotenv import load_dotenv
@@ -15,6 +16,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JWT_TOKEN_LOCATION = ['cookies']
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 
 
 class Desarrollo(Config):

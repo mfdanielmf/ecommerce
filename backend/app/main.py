@@ -22,7 +22,7 @@ app.config.from_object(config["desarrollo"])
 db.init_app(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
-CORS(app, origins="http://localhost:5173")
+CORS(app, origins="http://localhost:5173", supports_credentials=True)
 
 
 app.register_blueprint(producto_bp, url_prefix="/api/productos")

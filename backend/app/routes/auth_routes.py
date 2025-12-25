@@ -1,10 +1,7 @@
-import datetime
-import os
 from flask import Blueprint, jsonify, make_response, request
-from flask_jwt_extended import jwt_required, unset_jwt_cookies
-import jwt
-from app.repositories.user_repo import insert_user
-from app.services.auth_services import comprobar_token, validar_usuario, comprobar_login
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, set_access_cookies, unset_jwt_cookies
+from app.repositories.user_repo import insert_user, find_user_id
+from app.services.auth_services import validar_usuario, comprobar_login
 from app.models.exceptions import ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
 
 auth_bp = Blueprint("auth", __name__)
@@ -20,24 +17,15 @@ def login():
     try:
         usuario = comprobar_login(data["nombre"], data["contraseña"])
 
-        payload = {
-            'id': usuario.id,
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.now(datetime.timezone.utc)
-        }
+        token = create_access_token(str(usuario.id))
 
-        token = jwt.encode(payload, os.getenv(
-            "JWT_SECRET_KEY"), algorithm="HS256")
-
-        response_data = {
+        response = make_response(jsonify({
             "msg": "Has iniciado sesión correctamente",
             "token": token,
             "usuario": usuario.to_dict()
-        }
+        }), 200)
 
-        response = make_response(jsonify(response_data), 200)
-        response.set_cookie(key="access_token", value=token,
-                            httponly=True, max_age=3600)
+        set_access_cookies(response, token)
 
         return response
 
@@ -87,19 +75,19 @@ def register():
 
 
 @auth_bp.route("/me")
+@jwt_required()
 def me():
-    token = request.cookies.get("access_token")
+    id_usuario = int(get_jwt_identity())
 
-    if not token:
-        return jsonify({"error": "No hay ninguna sesión activa"}), 401
+    usuario = find_user_id(id_usuario)
 
-    resp, status = comprobar_token(token)
+    if not usuario:
+        return jsonify({"error": "Usuario no existe"}, 404)
 
-    return jsonify(resp), status
+    return jsonify({"usuario": usuario.to_dict()})
 
 
 @auth_bp.route("/logout", methods=["POST"])
-@jwt_required()
 def logout():
     # Devuelve 401 con un msg cuando no hay token
     resp = make_response(jsonify({"msg": "Sesión cerrada con éxito"}), 200)
