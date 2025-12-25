@@ -10,4 +10,7 @@ export default {
   obtenerUsuario() {
     return api().get('/auth/me', { withCredentials: true })
   },
+  cerrarSesion() {
+    return api().post('/auth/logout', {}, { withCredentials: true })
+  },
 }
