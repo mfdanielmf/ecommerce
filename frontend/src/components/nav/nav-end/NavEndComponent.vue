@@ -2,7 +2,7 @@
 import { LogInIcon } from 'lucide-vue-next'
 import CarritoDrawerComponent from './carrito/CarritoDrawerComponent.vue'
 import { useAuthStore } from '@/stores/authStore'
-import LoadingSpinner from '../common/LoadingSpinner.vue'
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { defineAsyncComponent } from 'vue'
 
 const ProfileComponent = defineAsyncComponent(() => import('./ProfileComponent.vue'))
