@@ -21,7 +21,6 @@ def login():
 
         response = make_response(jsonify({
             "msg": "Has iniciado sesión correctamente",
-            "token": token,
             "usuario": usuario.to_dict()
         }), 200)
 
