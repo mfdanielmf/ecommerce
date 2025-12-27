@@ -6,6 +6,7 @@ const ProductDetailsView = () => import('@/views/ProductDetailsView.vue')
 const AuthLayout = () => import('@/layouts/AuthLayout.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
+const NotFoundView = () => import('@/views/NotFoundView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,11 @@ const router = createRouter({
           },
         },
       ],
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not_found',
+      component: NotFoundView,
     },
   ],
 })
