@@ -25,7 +25,7 @@ import {
       </nav>
 
       <!-- Contenido principal -->
-      <div class="p-4">Test</div>
+      <RouterView class="p-4" />
     </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible">
@@ -35,13 +35,13 @@ import {
       >
         <!-- Contenido sidebar -->
         <ul class="menu w-full grow">
-          <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" />
+          <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" name-path="admin_dashboard" />
 
-          <AsideItem :icon="PackageIcon" label="Productos" />
+          <AsideItem :icon="PackageIcon" label="Productos" name-path="admin_productos" />
 
-          <AsideItem :icon="FolderTreeIcon" label="Categorías" />
+          <AsideItem :icon="FolderTreeIcon" label="Categorías" name-path="admin_categorias" />
 
-          <AsideItem :icon="ShoppingCartIcon" label="Pedidos" />
+          <AsideItem :icon="ShoppingCartIcon" label="Pedidos" name-path="admin_pedidos" />
         </ul>
       </div>
     </div>

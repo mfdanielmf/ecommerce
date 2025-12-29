@@ -7,14 +7,22 @@ defineProps({
   icon: {
     required: true,
   },
+  namePath: {
+    type: String,
+    required: true,
+  },
 })
 </script>
 
 <template>
   <li>
-    <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" :data-tip="label">
+    <RouterLink
+      :to="{ name: namePath }"
+      class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+      :data-tip="label"
+    >
       <component :is="icon" :size="16" />
       <span class="is-drawer-close:hidden">{{ label }}</span>
-    </button>
+    </RouterLink>
   </li>
 </template>

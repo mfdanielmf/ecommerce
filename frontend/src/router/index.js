@@ -10,6 +10,10 @@ const ProductDetailsView = () => import('@/views/ProductDetailsView.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
+const AdminDashboardView = () => import('@/views/admin/AdminDashboardView.vue')
+const AdminProductosView = () => import('@/views/admin/AdminProductosView.vue')
+const AdminCategoriasView = () => import('@/views/admin/AdminCategoriasView.vue')
+const AdminPedidosView = () => import('@/views/admin/AdminPedidosView.vue')
 
 // ------------ACORDARME DE IMPLEMENTAR LÓGICA PARA NO PERMITIR EL ACCESO AL DASH MIENTRAS NO SE CARGUE EL USUARIO Y NO SEA ADMIN!!!!!!!!!! (PONDRÉ UN SPINNER O ALGO ASÍ. YA VERÉ) ---------------------
 
@@ -69,6 +73,29 @@ const router = createRouter({
     {
       path: '/admin',
       component: DashboardLayout,
+      redirect: { name: 'admin_dashboard' },
+      children: [
+        {
+          path: 'dashboard',
+          name: 'admin_dashboard',
+          component: AdminDashboardView,
+        },
+        {
+          path: 'productos',
+          name: 'admin_productos',
+          component: AdminProductosView,
+        },
+        {
+          path: 'categorias',
+          name: 'admin_categorias',
+          component: AdminCategoriasView,
+        },
+        {
+          path: 'pedidos',
+          name: 'admin_pedidos',
+          component: AdminPedidosView,
+        },
+      ],
     },
   ],
 })
