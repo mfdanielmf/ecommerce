@@ -79,21 +79,33 @@ const router = createRouter({
           path: 'dashboard',
           name: 'admin_dashboard',
           component: AdminDashboardView,
+          meta: {
+            titulo: 'Dashboard',
+          },
         },
         {
           path: 'productos',
           name: 'admin_productos',
           component: AdminProductosView,
+          meta: {
+            titulo: 'Productos',
+          },
         },
         {
           path: 'categorias',
           name: 'admin_categorias',
           component: AdminCategoriasView,
+          meta: {
+            titulo: 'Categorías',
+          },
         },
         {
           path: 'pedidos',
           name: 'admin_pedidos',
           component: AdminPedidosView,
+          meta: {
+            titulo: 'Pedidos',
+          },
         },
       ],
     },

@@ -3,10 +3,19 @@ import AsideItem from '@/components/dashboard/AsideItem.vue'
 import {
   FolderTreeIcon,
   LayoutDashboardIcon,
+  MoveLeftIcon,
   PackageIcon,
   PanelLeftOpenIcon,
   ShoppingCartIcon,
 } from 'lucide-vue-next'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute()
+
+const titulo = computed(() => {
+  return route.meta.titulo
+})
 
 // ------------ACORDARME DE IMPLEMENTAR LÓGICA PARA NO PERMITIR EL ACCESO AL DASH MIENTRAS NO SE CARGUE EL USUARIO Y NO SEA ADMIN!!!!!!!!!! (PONDRÉ UN SPINNER O ALGO ASÍ. YA VERÉ) ---------------------
 </script>
@@ -17,11 +26,20 @@ import {
     <div class="drawer-content">
       <!-- Navbar -->
       <nav class="navbar w-full bg-base-300">
-        <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
-          <PanelLeftOpenIcon :size="24" />
-        </label>
+        <div class="navbar-start">
+          <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
+            <PanelLeftOpenIcon :size="24" />
+          </label>
 
-        <div class="px-4">Test</div>
+          <div class="px-4 font-semibold text-primary">{{ titulo.toUpperCase() }}</div>
+        </div>
+
+        <div class="navbar-end">
+          <RouterLink :to="{ name: 'home' }" class="btn btn-primary group flex items-center">
+            <MoveLeftIcon :size="20" class="group-hover:-translate-x-1 transition" />
+            Volver a la tienda
+          </RouterLink>
+        </div>
       </nav>
 
       <!-- Contenido principal -->

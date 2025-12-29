@@ -20,6 +20,7 @@ defineProps({
       :to="{ name: namePath }"
       class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
       :data-tip="label"
+      active-class="menu-active"
     >
       <component :is="icon" :size="16" />
       <span class="is-drawer-close:hidden">{{ label }}</span>
