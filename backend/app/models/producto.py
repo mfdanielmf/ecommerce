@@ -15,7 +15,7 @@ class Producto(db.Model):
     stock = Column(Integer, default=0, nullable=False)
     img_url = Column(String(500), nullable=True)
     fecha_creacion = Column(
-        DateTime, default=datetime.now(timezone.utc), nullable=False)
+        DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
     def to_dict(self):
         return {

@@ -12,7 +12,8 @@ class Usuario(db.Model):
     correo = Column(String(120), nullable=False, unique=True)
     contraseña = Column(String, nullable=False)
     rol = Column(String(20), default="usuario")
-    fecha_creacion = Column(DateTime, default=datetime.now(timezone.utc))
+    fecha_creacion = Column(
+        DateTime, default=lambda: datetime.now(timezone.utc))
 
     def __init__(self, nombre: str, correo: str, contraseña: str):
         self.nombre = nombre
