@@ -1,11 +1,14 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import ProductTable from '@/components/dashboard/ProductTable.vue'
+import ProductoDialog from '@/components/dashboard/productos/ProductoDialog.vue'
+import ProductTable from '@/components/dashboard/productos/ProductTable.vue'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const productosStore = productStore()
+
+const añadirAbierto = ref(false)
 
 onMounted(() => {
   productosStore.error = null
@@ -20,11 +23,14 @@ onMounted(() => {
 
   <div v-else>
     <span>
-      <button class="btn btn-primary mb-4">
+      <button class="btn btn-primary mb-4" @click="añadirAbierto = true">
         <PlusIcon :size="18" />
         Añadir producto
       </button>
     </span>
+
+    <ProductoDialog v-model:open="añadirAbierto" />
+
     <ProductTable :productos="productosStore.productos" />
   </div>
 </template>
