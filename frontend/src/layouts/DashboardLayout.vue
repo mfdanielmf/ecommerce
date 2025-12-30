@@ -43,7 +43,7 @@ const titulo = computed(() => {
       </nav>
 
       <!-- Contenido principal -->
-      <RouterView class="p-4" />
+      <RouterView class="p-4 max-w-300 flex flex-col justify-self-center" />
     </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible">
