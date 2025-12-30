@@ -44,7 +44,7 @@ const titulo = computed(() => {
       </nav>
 
       <!-- Contenido principal -->
-      <RouterView class="p-4 max-w-300 flex flex-col justify-self-center" />
+      <RouterView class="p-4 flex flex-col justify-self-center" />
     </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible">
@@ -59,13 +59,15 @@ const titulo = computed(() => {
             <h1 class="is-drawer-close:hidden text-xl text-primary font-semibold">TechStore</h1>
           </div>
 
-          <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" name-path="admin_dashboard" />
+          <div class="space-y-1">
+            <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" name-path="admin_dashboard" />
 
-          <AsideItem :icon="PackageIcon" label="Productos" name-path="admin_productos" />
+            <AsideItem :icon="PackageIcon" label="Productos" name-path="admin_productos" />
 
-          <AsideItem :icon="FolderTreeIcon" label="Categorías" name-path="admin_categorias" />
+            <AsideItem :icon="FolderTreeIcon" label="Categorías" name-path="admin_categorias" />
 
-          <AsideItem :icon="ShoppingCartIcon" label="Pedidos" name-path="admin_pedidos" />
+            <AsideItem :icon="ShoppingCartIcon" label="Pedidos" name-path="admin_pedidos" />
+          </div>
         </ul>
       </div>
     </div>
