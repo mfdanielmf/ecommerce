@@ -1,6 +1,7 @@
 <script setup>
 import AsideItem from '@/components/dashboard/AsideItem.vue'
 import {
+  CpuIcon,
   FolderTreeIcon,
   LayoutDashboardIcon,
   MoveLeftIcon,
@@ -53,6 +54,11 @@ const titulo = computed(() => {
       >
         <!-- Contenido sidebar -->
         <ul class="menu w-full grow">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <CpuIcon class="text-primary" />
+            <h1 class="is-drawer-close:hidden text-xl text-primary font-semibold">TechStore</h1>
+          </div>
+
           <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" name-path="admin_dashboard" />
 
           <AsideItem :icon="PackageIcon" label="Productos" name-path="admin_productos" />
