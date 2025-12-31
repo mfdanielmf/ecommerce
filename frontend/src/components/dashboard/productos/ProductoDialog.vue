@@ -9,6 +9,7 @@ import {
   DialogRoot,
   DialogTitle,
 } from 'radix-vue'
+import ProductoForm from './ProductoForm.vue'
 
 defineProps({
   open: {
@@ -32,6 +33,9 @@ const emit = defineEmits(['update:open'])
         <DialogDescription class="mt-2.5 mb-5 text-[15px] leading-normal">
           Introduce los datos del producto
         </DialogDescription>
+
+        <!-- Formulario para introducir el producto -->
+        <ProductoForm />
 
         <div class="mt-6.25 flex justify-end gap-3">
           <DialogClose as-child>

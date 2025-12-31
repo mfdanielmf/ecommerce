@@ -5,6 +5,7 @@ import ProductTable from '@/components/dashboard/productos/ProductTable.vue'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
 import { onMounted, ref } from 'vue'
+import ErrorMessage from '@/components/common/ErrorMessage.vue'
 
 const productosStore = productStore()
 
@@ -20,6 +21,8 @@ onMounted(() => {
   <div v-if="productosStore.cargando" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
+
+  <ErrorMessage v-else-if="productosStore.error">{{ productosStore.error }}</ErrorMessage>
 
   <div v-else>
     <span>
