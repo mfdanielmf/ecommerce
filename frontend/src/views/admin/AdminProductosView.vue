@@ -1,11 +1,16 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import ProductoDialog from '@/components/dashboard/productos/ProductoDialog.vue'
-import ProductTable from '@/components/dashboard/productos/ProductTable.vue'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
-import { onMounted, ref } from 'vue'
-import ErrorMessage from '@/components/common/ErrorMessage.vue'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
+
+const ProductoDialog = defineAsyncComponent(
+  () => import('@/components/dashboard/productos/ProductoDialog.vue'),
+)
+const ProductTable = defineAsyncComponent(
+  () => import('@/components/dashboard/productos/ProductTable.vue'),
+)
+const ErrorMessage = defineAsyncComponent(() => import('@/components/common/ErrorMessage.vue'))
 
 const productosStore = productStore()
 
@@ -32,8 +37,11 @@ onMounted(() => {
       </button>
     </span>
 
-    <ProductoDialog v-model:open="añadirAbierto" />
+    <ProductoDialog v-model:open="añadirAbierto" v-if="añadirAbierto" />
 
-    <ProductTable :productos="productosStore.productos" />
+    <ProductTable
+      :productos="productosStore.productos"
+      v-if="Object.keys(productosStore.productos).length > 0"
+    />
   </div>
 </template>
