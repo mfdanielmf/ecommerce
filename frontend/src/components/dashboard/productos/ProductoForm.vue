@@ -1,59 +1,73 @@
+<script setup>
+import { configure, useForm } from 'vee-validate'
+import * as yup from 'yup'
+import ProductoField from './ProductoField.vue'
+
+configure({
+  validateOnInput: false,
+})
+
+const schema = yup.object({
+  nombre: yup
+    .string()
+    .required('El nombre es obligatorio')
+    .max(50, 'El tamaño máximo es de 50 carateres'),
+  descripcion: yup
+    .string()
+    .required('La descripción es obligatoria')
+    .max(500, 'El tamaño máximo es de 500 caracteres'),
+  precio: yup
+    .number()
+    .required('El precio es obligatorio')
+    .min(0.0, 'El precio no puede ser negativo')
+    .max(99999999.99, 'Has superado el límite de precio'),
+  stock: yup
+    .number()
+    .required('El stock es obligatorio')
+    .integer('El stock no puede tener decimales')
+    .typeError('El stock no puede tener decimales')
+    .min(0, 'El stock no puede ser negativo'),
+  url: yup
+    .string()
+    .required('La imagen es obligatoria')
+    .max(500, 'El tamaño máximo de la url es de 500 caracteres'),
+})
+
+const { handleSubmit, isSubmitting } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    precio: 0.0,
+    stock: 0,
+  },
+})
+</script>
+
 <template>
   <form>
-    <div class="flex flex-col gap-2">
-      <label for="nombre">Nombre *</label>
-      <input
-        type="text"
-        name="nombre"
-        id="nombre"
-        class="input"
+    <div class="space-y-2">
+      <ProductoField
+        nombre="nombre"
+        tipo="text"
+        label="Nombre *"
         placeholder="Introduce el nombre del producto"
       />
-    </div>
 
-    <div class="flex flex-col gap-2 mt-2">
-      <label for="descripcion">Descripción *</label>
-      <input
-        type="text"
-        name="descripcion"
-        id="descripcion"
-        class="input"
+      <ProductoField
+        nombre="descripcion"
+        tipo="text"
+        label="Descripción *"
         placeholder="Introduce la descripción del producto"
       />
-    </div>
 
-    <div class="flex flex-col gap-2 mt-2">
-      <label for="precio">Precio *</label>
-      <input
-        type="text"
-        name="precio"
-        id="precio"
-        class="input"
-        placeholder="Introduce un precio"
-      />
-    </div>
+      <ProductoField nombre="precio" tipo="number" label="Precio *" :min="0" :step="0.01" />
 
-    <div class="flex flex-col gap-2 mt-2">
-      <label for="stock">Stock *</label>
-      <input
-        type="number"
-        name="stock"
-        id="stock"
-        class="input"
-        min="0"
-        value="0"
-        placeholder="Introduce el stock"
-      />
-    </div>
+      <ProductoField nombre="stock" tipo="number" label="Stock *" :min="0" />
 
-    <div class="flex flex-col gap-2 mt-2">
-      <label for="url">URL img *</label>
-      <input
-        type="text"
-        name="url"
-        id="url"
-        class="input"
-        placeholder="Introduce la url de la imagen del producto"
+      <ProductoField
+        nombre="url"
+        tipo="text"
+        label="URL imagen *"
+        placeholder="Introduce la imagen del producto"
       />
     </div>
   </form>
