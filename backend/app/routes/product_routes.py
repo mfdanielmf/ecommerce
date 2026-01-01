@@ -28,8 +28,6 @@ def producto_id(id):
 def insertar_producto():
     data = request.get_json()
 
-    print(data)
-
     if not data or not data.get("nombre") or not data.get("descripcion") or (data.get("stock") is None) or (data.get("precio") is None) or not data.get("url"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 

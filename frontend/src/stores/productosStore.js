@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import productosApi from '@/api/productosApi'
+import { toast } from 'vue-sonner'
 
 export const productStore = defineStore('productos', () => {
   const productos = ref({})
@@ -45,5 +46,26 @@ export const productStore = defineStore('productos', () => {
     }
   }
 
-  return { productos, error, cargando, fetchProductos, fetchProductoId, getProductoPorId }
+  //INSETAR
+  async function insertarProducto(data) {
+    try {
+      const req = await productosApi.insertarProducto(data)
+
+      toast.success(req.data.msg || 'Se ha insertado el producto correctamente')
+
+      productos.value[req.data.producto.id] = req.data.producto
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+    }
+  }
+
+  return {
+    productos,
+    error,
+    cargando,
+    fetchProductos,
+    fetchProductoId,
+    getProductoPorId,
+    insertarProducto,
+  }
 })

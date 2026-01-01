@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Field } from 'vee-validate'
 import { CircleXIcon } from 'lucide-vue-next'
 

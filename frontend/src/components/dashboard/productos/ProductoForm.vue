@@ -2,6 +2,7 @@
 import { configure, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import ProductoField from './ProductoField.vue'
+import { productStore } from '@/stores/productosStore'
 
 configure({
   validateOnInput: false,
@@ -40,10 +41,18 @@ const { handleSubmit, isSubmitting } = useForm({
     stock: 0,
   },
 })
+
+const productosStore = productStore()
+
+const onSubmit = handleSubmit(async (data) => {
+  await productosStore.insertarProducto(data)
+})
+
+defineExpose({ onSubmit, isSubmitting })
 </script>
 
 <template>
-  <form>
+  <form @submit.prevent="onSubmit">
     <div class="space-y-2">
       <ProductoField
         nombre="nombre"

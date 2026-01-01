@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from 'radix-vue'
 import ProductoForm from './ProductoForm.vue'
+import { ref } from 'vue'
 
 defineProps({
   open: {
@@ -18,7 +19,15 @@ defineProps({
   },
 })
 
-const emit = defineEmits(['update:open'])
+const emit = defineEmits(['update:open', 'submitFormulario'])
+
+const formRef = ref(null)
+
+function handleSubmit() {
+  if (formRef.value) {
+    formRef.value.onSubmit()
+  }
+}
 </script>
 
 <template>
@@ -35,18 +44,26 @@ const emit = defineEmits(['update:open'])
         </DialogDescription>
 
         <!-- Formulario para introducir el producto -->
-        <ProductoForm />
+        <ProductoForm ref="formRef" />
 
         <div class="mt-6.25 flex justify-end gap-3">
           <DialogClose as-child>
             <button class="btn">Cancelar</button>
           </DialogClose>
 
-          <DialogClose as-child>
-            <button class="btn bg-neutral-800 text-white hover:bg-neutral-900">
-              Añadir Producto
-            </button>
-          </DialogClose>
+          <button
+            class=""
+            :class="
+              formRef?.isSubmitting
+                ? 'btn btn-disabled'
+                : 'btn bg-neutral-800 text-white hover:bg-neutral-900'
+            "
+            :disabled="formRef?.isSubmitting"
+            @click="handleSubmit"
+          >
+            <span class="loading loading-spinner" v-if="formRef?.isSubmitting"></span>
+            {{ formRef?.isSubmitting ? 'Cargando...' : 'Añadir Producto' }}
+          </button>
         </div>
 
         <DialogClose

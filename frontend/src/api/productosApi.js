@@ -7,4 +7,7 @@ export default {
   getProductoId(id) {
     return api().get(`/api/productos/${id}`)
   },
+  insertarProducto(data) {
+    return api().post('/api/productos/insertar', data)
+  },
 }
