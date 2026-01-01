@@ -9,13 +9,20 @@ class Producto(db.Model):
     __tablename__ = "productos"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String(50), unique=True, nullable=False)
-    descripcion = Column(String(500), nullable=True)
+    nombre = Column(String(50), nullable=False)
+    descripcion = Column(String(500), nullable=False)
     precio = Column(DECIMAL(precision=10, scale=2), nullable=False)
     stock = Column(Integer, default=0, nullable=False)
-    img_url = Column(String(500), nullable=True)
+    img_url = Column(String(500), nullable=False)
     fecha_creacion = Column(
         DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str):
+        self.nombre = nombre
+        self.descripcion = descripcion
+        self.precio = precio
+        self.stock = stock
+        self.img_url = img_url
 
     def to_dict(self):
         return {

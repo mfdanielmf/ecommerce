@@ -13,3 +13,10 @@ def get_product_by_id(id: int) -> Producto | None:
     producto = Producto.query.get(id)
 
     return producto
+
+
+def insert_product(producto: Producto) -> Producto:
+    db.session.add(producto)
+    db.session.commit()
+
+    return producto

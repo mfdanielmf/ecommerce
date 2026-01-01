@@ -48,7 +48,7 @@ def register():
     nombre: str = data["nombre"]
     correo: str = data["correo"]
     contraseña: str = data["contraseña"]
-    contraseña_repetir = data["contraseña_repetir"]
+    contraseña_repetir: str = data["contraseña_repetir"]
 
     try:
         usuario = validar_usuario(
