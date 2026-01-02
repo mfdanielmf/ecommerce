@@ -1,6 +1,6 @@
 from app.models.exceptions import CampoProductoIncorrectoException, ProductoNoEncontradoException
 from app.models.producto import Producto
-from app.repositories.product_repo import get_all_products, get_product_by_id, insert_product
+from app.repositories.product_repo import get_all_products, get_product_by_id, insert_product, delete_product
 
 
 def obtener_todos_los_productos() -> list[Producto]:
@@ -28,3 +28,12 @@ def insertar_producto_base(nombre: str, descripcion: str, precio: float, stock: 
     producto_insertado = insert_product(producto)
 
     return producto_insertado
+
+
+def eliminar_producto_base(id: int) -> None | ProductoNoEncontradoException:
+    try:
+        producto = obtener_producto_id(id)
+
+        delete_product(producto)
+    except ProductoNoEncontradoException:
+        raise ProductoNoEncontradoException()
