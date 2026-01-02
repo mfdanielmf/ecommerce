@@ -6,6 +6,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['abrirConfirmarEliminar'])
 </script>
 
 <template>
@@ -35,7 +37,11 @@ const props = defineProps({
               <PencilIcon :size="18" />
               Editar
             </button>
-            <button class="btn btn-error">
+
+            <button
+              class="btn btn-error"
+              @click="emit('abrirConfirmarEliminar', { id: producto.id, nombre: producto.nombre })"
+            >
               <Trash2Icon :size="18" />
               Eliminar
             </button>

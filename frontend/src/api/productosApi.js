@@ -10,4 +10,7 @@ export default {
   insertarProducto(data) {
     return api().post('/api/productos/', data)
   },
+  eliminarProductoId(id) {
+    return api().delete(`/api/productos/${id}`)
+  },
 }

@@ -46,7 +46,7 @@ export const productStore = defineStore('productos', () => {
     }
   }
 
-  //INSETAR
+  //INSERTAR
   async function insertarProducto(data) {
     try {
       const req = await productosApi.insertarProducto(data)
@@ -55,11 +55,23 @@ export const productStore = defineStore('productos', () => {
 
       productos.value[req.data.producto.id] = req.data.producto
 
-      return true //Éxito
+      return true //Éxito (cerrar el diálogo de insertar el producto)
     } catch (e) {
       toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
 
-      return false //Fallo
+      return false //Fallo (dejar el diálogo abierto)
+    }
+  }
+
+  async function eliminarProductoId(id) {
+    try {
+      const req = await productosApi.eliminarProductoId(id)
+
+      delete productos.value[id]
+
+      toast.success(req.data?.msg)
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
     }
   }
 
@@ -71,5 +83,6 @@ export const productStore = defineStore('productos', () => {
     fetchProductoId,
     getProductoPorId,
     insertarProducto,
+    eliminarProductoId,
   }
 })
