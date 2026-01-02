@@ -15,6 +15,8 @@ const productoLocalStorage = computed(() => {
 })
 
 const añadirProductoCarrito = () => {
+  if (props.producto.stock === 0) return toast.error('No hay stock disponible para este producto')
+
   if (
     productoLocalStorage.value &&
     productoLocalStorage.value.cantidad + 1 > productoLocalStorage.value.stock
