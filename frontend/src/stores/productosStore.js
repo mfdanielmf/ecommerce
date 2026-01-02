@@ -54,8 +54,12 @@ export const productStore = defineStore('productos', () => {
       toast.success(req.data.msg || 'Se ha insertado el producto correctamente')
 
       productos.value[req.data.producto.id] = req.data.producto
+
+      return true //Éxito
     } catch (e) {
       toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+
+      return false //Fallo
     }
   }
 

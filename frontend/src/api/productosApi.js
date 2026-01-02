@@ -8,6 +8,6 @@ export default {
     return api().get(`/api/productos/${id}`)
   },
   insertarProducto(data) {
-    return api().post('/api/productos/insertar', data)
+    return api().post('/api/productos/', data)
   },
 }

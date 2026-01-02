@@ -4,6 +4,8 @@ import * as yup from 'yup'
 import ProductoField from './ProductoField.vue'
 import { productStore } from '@/stores/productosStore'
 
+const emit = defineEmits(['succcess'])
+
 configure({
   validateOnInput: false,
 })
@@ -45,7 +47,9 @@ const { handleSubmit, isSubmitting } = useForm({
 const productosStore = productStore()
 
 const onSubmit = handleSubmit(async (data) => {
-  await productosStore.insertarProducto(data)
+  const success = await productosStore.insertarProducto(data)
+
+  if (success) emit('succcess')
 })
 
 defineExpose({ onSubmit, isSubmitting })

@@ -1,12 +1,9 @@
 <script setup>
 import { ShoppingCartIcon } from 'lucide-vue-next'
 import { carritoStore } from '@/stores/carritoStore'
-import { computed, defineAsyncComponent, ref } from 'vue'
+import QuantitySelectorComponent from './QuantitySelectorComponent.vue'
+import { computed, ref } from 'vue'
 import { toast } from 'vue-sonner'
-
-const QuantitySelectorComponent = defineAsyncComponent(
-  () => import('./QuantitySelectorComponent.vue'),
-)
 
 const props = defineProps({
   producto: {

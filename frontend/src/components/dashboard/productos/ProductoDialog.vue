@@ -44,7 +44,7 @@ function handleSubmit() {
         </DialogDescription>
 
         <!-- Formulario para introducir el producto -->
-        <ProductoForm ref="formRef" />
+        <ProductoForm ref="formRef" @succcess="emit('update:open', false)" />
 
         <div class="mt-6.25 flex justify-end gap-3">
           <DialogClose as-child>
