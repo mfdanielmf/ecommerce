@@ -1,9 +1,12 @@
 <script setup>
 import { ShoppingCartIcon } from 'lucide-vue-next'
-import QuantitySelectorComponent from './QuantitySelectorComponent.vue'
 import { carritoStore } from '@/stores/carritoStore'
-import { computed, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 import { toast } from 'vue-sonner'
+
+const QuantitySelectorComponent = defineAsyncComponent(
+  () => import('./QuantitySelectorComponent.vue'),
+)
 
 const props = defineProps({
   producto: {
@@ -19,6 +22,8 @@ const productoLocalStorage = computed(() => {
 })
 
 const añadirProducto = () => {
+  if (props.producto.stock === 0) return toast.error('No hay stock disponible para este producto')
+
   if (
     productoLocalStorage.value &&
     productoLocalStorage.value.cantidad + cantidad.value > props.producto.stock
@@ -37,14 +42,20 @@ const añadirProducto = () => {
   </p>
 
   <div class="w-62.5 max-w-sm relative mt-4">
-    <QuantitySelectorComponent :stock="producto.stock" v-model="cantidad" />
+    <QuantitySelectorComponent
+      :stock="producto.stock"
+      v-model="cantidad"
+      v-if="producto.stock > 0"
+    />
 
     <button
-      class="flex items-center justify-center gap-4 mt-6 font-semibold w-full btn btn-primary btn-lg"
+      class="flex items-center justify-center gap-4 font-semibold w-full btn btn-primary btn-lg"
+      :class="{ 'mt-6': producto.stock > 0 }"
       @click="añadirProducto"
+      :disabled="props.producto.stock === 0"
     >
-      <ShoppingCartIcon />
-      <p>Añadir al carrito</p>
+      <ShoppingCartIcon v-if="props.producto.stock > 0" />
+      <p>{{ props.producto.stock > 0 ? 'Añadir al carrito' : 'Producto agotado' }}</p>
     </button>
   </div>
 </template>
