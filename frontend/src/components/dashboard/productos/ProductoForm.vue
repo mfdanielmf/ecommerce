@@ -2,9 +2,13 @@
 import { configure, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import ProductoField from './ProductoField.vue'
-import { productStore } from '@/stores/productosStore'
 
-const emit = defineEmits(['succcess'])
+const props = defineProps({
+  funcion: {
+    type: Function,
+    required: true,
+  },
+})
 
 configure({
   validateOnInput: false,
@@ -44,12 +48,8 @@ const { handleSubmit, isSubmitting } = useForm({
   },
 })
 
-const productosStore = productStore()
-
 const onSubmit = handleSubmit(async (data) => {
-  const success = await productosStore.insertarProducto(data)
-
-  if (success) emit('succcess')
+  await props.funcion(data)
 })
 
 defineExpose({ onSubmit, isSubmitting })

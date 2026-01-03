@@ -7,7 +7,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['abrirConfirmarEliminar'])
+const emit = defineEmits(['abrirConfirmarEliminar', 'abrirEditarProducto'])
 </script>
 
 <template>
@@ -33,7 +33,7 @@ const emit = defineEmits(['abrirConfirmarEliminar'])
           <td>{{ producto.stock }}</td>
           <td>{{ producto.fecha_creacion }}</td>
           <td class="flex gap-2" id="btn-container">
-            <button class="btn btn-soft btn-info">
+            <button class="btn btn-soft btn-info" @click="emit('abrirEditarProducto', producto)">
               <PencilIcon :size="18" />
               Editar
             </button>

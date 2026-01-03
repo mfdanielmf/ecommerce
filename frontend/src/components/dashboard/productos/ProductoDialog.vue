@@ -12,9 +12,9 @@ import {
 import ProductoForm from './ProductoForm.vue'
 import { ref } from 'vue'
 
-defineProps({
-  open: {
-    type: Boolean,
+const props = defineProps({
+  funcion: {
+    type: Function,
     required: true,
   },
 })
@@ -23,7 +23,7 @@ const emit = defineEmits(['update:open', 'submitFormulario'])
 
 const formRef = ref(null)
 
-function handleSubmit() {
+function aceptarFormulario() {
   if (formRef.value) {
     formRef.value.onSubmit()
   }
@@ -31,20 +31,22 @@ function handleSubmit() {
 </script>
 
 <template>
-  <DialogRoot :open="open" @update:open="emit('update:open', $event)">
+  <DialogRoot @update:open="emit('update:open', $event)">
     <DialogPortal>
       <DialogOverlay class="bg-black/50 fixed inset-0 z-30" />
       <DialogContent
         class="fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-112.5 translate-x-[-50%] translate-y-[-50%] rounded-md bg-white p-6.25 shadow-[hsl(206_22%_7%/35%)_0px_10px_38px_-10px,hsl(206_22%_7%/20%)_0px_10px_20px_-15px] focus:outline-none z-100"
       >
-        <DialogTitle class="m-0 text-[17px] font-semibold"> Crear un nuevo producto </DialogTitle>
+        <DialogTitle class="m-0 text-[17px] font-semibold">
+          <slot name="titulo">Crear un nuevo producto</slot>
+        </DialogTitle>
 
         <DialogDescription class="mt-2.5 mb-5 text-[15px] leading-normal">
-          Introduce los datos del producto
+          <slot name="descripcion">Introduce los datos del producto</slot>
         </DialogDescription>
 
         <!-- Formulario para introducir el producto -->
-        <ProductoForm ref="formRef" @succcess="emit('update:open', false)" />
+        <ProductoForm ref="formRef" :funcion="props.funcion" />
 
         <div class="mt-6.25 flex justify-end gap-3">
           <DialogClose as-child>
@@ -59,7 +61,7 @@ function handleSubmit() {
                 : 'btn bg-neutral-800 text-white hover:bg-neutral-900'
             "
             :disabled="formRef?.isSubmitting"
-            @click="handleSubmit"
+            @click="aceptarFormulario"
           >
             <span class="loading loading-spinner" v-if="formRef?.isSubmitting"></span>
             {{ formRef?.isSubmitting ? 'Cargando...' : 'Añadir Producto' }}
