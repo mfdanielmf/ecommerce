@@ -32,3 +32,7 @@ class ContraseñaIncorrectaException(Exception):
 
 class CampoProductoIncorrectoException(Exception):
     pass
+
+
+class ErrorInternoException(Exception):
+    pass

@@ -25,3 +25,9 @@ def insert_product(producto: Producto) -> Producto:
 def delete_product(producto: Producto) -> None:
     db.session.delete(producto)
     db.session.commit()
+
+
+def update_product(producto: Producto) -> Producto:
+    db.session.commit()
+
+    return producto
