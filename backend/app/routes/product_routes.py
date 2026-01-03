@@ -34,15 +34,8 @@ def post_insertar_producto():
     if not data or not data.get("nombre") or not data.get("descripcion") or (data.get("stock") is None) or (data.get("precio") is None) or not data.get("url"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
-    nombre: str = data["nombre"]
-    descripcion: str = data["descripcion"]
-    stock: int = data["stock"]
-    precio: float = data["precio"]
-    url: str = data["url"]
-
     try:
-        producto = insertar_producto_base(
-            nombre=nombre, descripcion=descripcion, precio=precio, stock=stock, url_img=url)
+        producto = insertar_producto_base(data)
 
         return jsonify({
             "msg": "Producto añadido correctamente",
@@ -50,6 +43,8 @@ def post_insertar_producto():
         }), 200
     except CampoProductoIncorrectoException:
         return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
+    except ErrorInternoException:
+        return jsonify({"error": "Ha ocurrido un error en la petición"}), 500
 
 
 # DELETE ELIMINAR PRODUCTO

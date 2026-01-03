@@ -18,16 +18,25 @@ def obtener_producto_id(id: int) -> Producto | ProductoNoEncontradoException:
     return producto
 
 
-def insertar_producto_base(nombre: str, descripcion: str, precio: float, stock: int, url_img: str) -> Producto | CampoProductoIncorrectoException:
-    if len(nombre) > 50 or len(descripcion) > 500 or precio > 99999999.99 or stock < 0 or len(url_img) > 500:
-        raise CampoProductoIncorrectoException()
+def insertar_producto_base(data) -> Producto | CampoProductoIncorrectoException | ErrorInternoException:
+    try:
+        nombre: str = data["nombre"]
+        descripcion: str = data["descripcion"]
+        stock: int = int(data["stock"])
+        precio: float = float(data["precio"])
+        url_img: str = data["url"]
 
-    producto = Producto(nombre=nombre, descripcion=descripcion,
-                        precio=precio, stock=stock, img_url=url_img)
+        if len(nombre) < 1 or len(nombre) > 50 or len(descripcion) < 1 or len(descripcion) > 500 or precio < 0 or precio > 99999999.99 or stock < 0 or len(url_img) < 1 or len(url_img) > 500:
+            raise CampoProductoIncorrectoException()
 
-    producto_insertado = insert_product(producto)
+        producto = Producto(nombre=nombre, descripcion=descripcion,
+                            precio=precio, stock=stock, img_url=url_img)
 
-    return producto_insertado
+        producto_insertado = insert_product(producto)
+
+        return producto_insertado
+    except ValueError:
+        raise ErrorInternoException()
 
 
 def eliminar_producto_base(id: int) -> None | ProductoNoEncontradoException:
@@ -39,7 +48,7 @@ def eliminar_producto_base(id: int) -> None | ProductoNoEncontradoException:
         raise ProductoNoEncontradoException()
 
 
-def actualizar_datos_producto(id: int, data) -> Producto | ProductoNoEncontradoException | CampoProductoIncorrectoException:
+def actualizar_datos_producto(id: int, data) -> Producto | ProductoNoEncontradoException | CampoProductoIncorrectoException | ErrorInternoException:
     try:
         producto: Producto = obtener_producto_id(id)
 
