@@ -2,7 +2,8 @@ from datetime import datetime, timezone
 
 from app.db.db import db
 
-from sqlalchemy import DECIMAL, Column, DateTime, Integer, String
+from sqlalchemy import DECIMAL, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 
 class Producto(db.Model):
@@ -16,6 +17,13 @@ class Producto(db.Model):
     img_url = Column(String(500), nullable=False)
     fecha_creacion = Column(
         DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    # FK
+    id_categoria = Column(Integer, ForeignKey('categorias.id'), nullable=False)
+
+    # Un producto solo tiene 1 categoría y es obligatoria
+    categoria = relationship(
+        "Categoria", back_populates="productos", passive_deletes=True)
 
     def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str):
         self.nombre = nombre
