@@ -17,6 +17,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  textoBoton: {
+    type: String,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['update:open', 'submitFormulario'])
@@ -54,7 +58,6 @@ function aceptarFormulario() {
           </DialogClose>
 
           <button
-            class=""
             :class="
               formRef?.isSubmitting
                 ? 'btn btn-disabled'
@@ -64,7 +67,7 @@ function aceptarFormulario() {
             @click="aceptarFormulario"
           >
             <span class="loading loading-spinner" v-if="formRef?.isSubmitting"></span>
-            {{ formRef?.isSubmitting ? 'Cargando...' : 'Añadir Producto' }}
+            {{ formRef?.isSubmitting ? 'Cargando...' : props.textoBoton }}
           </button>
         </div>
 

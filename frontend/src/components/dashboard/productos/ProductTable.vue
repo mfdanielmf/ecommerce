@@ -33,7 +33,7 @@ const emit = defineEmits(['abrirConfirmarEliminar', 'abrirEditarProducto'])
           <td>{{ producto.stock }}</td>
           <td>{{ producto.fecha_creacion }}</td>
           <td class="flex gap-2" id="btn-container">
-            <button class="btn btn-soft btn-info" @click="emit('abrirEditarProducto', producto)">
+            <button class="btn btn-soft btn-info" @click="emit('abrirEditarProducto', producto.id)">
               <PencilIcon :size="18" />
               Editar
             </button>

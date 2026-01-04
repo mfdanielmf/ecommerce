@@ -75,6 +75,18 @@ export const productStore = defineStore('productos', () => {
     }
   }
 
+  async function editarProducto(id, data) {
+    try {
+      const req = await productosApi.editarProductoId(id, data)
+
+      toast.success(req.data.msg || 'Se ha editado el producto correctamente')
+
+      productos.value[id] = req.data.producto
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+    }
+  }
+
   return {
     productos,
     error,
@@ -84,5 +96,6 @@ export const productStore = defineStore('productos', () => {
     getProductoPorId,
     insertarProducto,
     eliminarProductoId,
+    editarProducto,
   }
 })

@@ -13,4 +13,7 @@ export default {
   eliminarProductoId(id) {
     return api().delete(`/api/productos/${id}`)
   },
+  editarProductoId(id, data) {
+    return api().put(`/api/productos/${id}`, data)
+  },
 }

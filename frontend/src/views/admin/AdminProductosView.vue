@@ -20,7 +20,7 @@ const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
 const productoEliminar = ref(null)
 const eliminando = ref(false)
-const productoEditar = ref(null)
+const idProductoEditar = ref(null)
 
 onMounted(() => {
   productosStore.error = null
@@ -55,15 +55,15 @@ async function eliminarProducto() {
   eliminarAbierto.value = false
 }
 
-function abrirEditarProducto(producto) {
-  if (!producto) return
+function abrirEditarProducto(idProducto) {
+  if (!idProducto) return
 
-  productoEditar.value = producto
+  idProductoEditar.value = idProducto
   editarAbierto.value = true
 }
 
-function editarProducto(formRef) {
-  console.log('test')
+async function editarProducto(data) {
+  await productosStore.editarProducto(idProductoEditar.value, data)
 }
 </script>
 
@@ -83,13 +83,23 @@ function editarProducto(formRef) {
     </span>
 
     <!-- Añadir dialog -->
-    <ProductoDialog v-model:open="añadirAbierto" v-if="añadirAbierto" :funcion="añadirProducto">
+    <ProductoDialog
+      v-model:open="añadirAbierto"
+      v-if="añadirAbierto"
+      :funcion="añadirProducto"
+      texto-boton="Añadir Producto"
+    >
       <template #titulo>Crear un nuevo producto</template>
       <template #descripcion>Introduce los datos del producto</template>
     </ProductoDialog>
 
     <!-- Editar dialog -->
-    <ProductoDialog v-model:open="editarAbierto" v-if="editarAbierto" :funcion="editarProducto">
+    <ProductoDialog
+      v-model:open="editarAbierto"
+      v-if="editarAbierto"
+      :funcion="editarProducto"
+      texto-boton="Editar Producto"
+    >
       <template #titulo>Editar un producto</template>
       <template #descripcion>Modifica los campos del producto</template>
     </ProductoDialog>
