@@ -20,7 +20,7 @@ const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
 const productoEliminar = ref(null)
 const eliminando = ref(false)
-const idProductoEditar = ref(null)
+const productoEditar = ref(null)
 
 onMounted(() => {
   productosStore.error = null
@@ -55,15 +55,21 @@ async function eliminarProducto() {
   eliminarAbierto.value = false
 }
 
-function abrirEditarProducto(idProducto) {
-  if (!idProducto) return
+function abrirEditarProducto(producto) {
+  if (!producto) return
 
-  idProductoEditar.value = idProducto
+  productoEditar.value = producto
   editarAbierto.value = true
 }
 
 async function editarProducto(data) {
-  await productosStore.editarProducto(idProductoEditar.value, data)
+  const success = await productosStore.editarProducto(productoEditar.value.id, data)
+
+  if (success) {
+    editarAbierto.value = false
+  } else {
+    editarAbierto.value = true
+  }
 }
 </script>
 
@@ -99,6 +105,7 @@ async function editarProducto(data) {
       v-if="editarAbierto"
       :funcion="editarProducto"
       texto-boton="Editar Producto"
+      :producto="productoEditar"
     >
       <template #titulo>Editar un producto</template>
       <template #descripcion>Modifica los campos del producto</template>

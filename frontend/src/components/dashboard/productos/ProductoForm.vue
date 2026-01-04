@@ -8,6 +8,9 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  producto: {
+    type: Object,
+  },
 })
 
 configure({
@@ -43,8 +46,11 @@ const schema = yup.object({
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: schema,
   initialValues: {
-    precio: 0.0,
-    stock: 0,
+    nombre: props.producto?.nombre || '',
+    descripcion: props.producto?.descripcion || '',
+    precio: props.producto?.precio || 0.0,
+    stock: props.producto?.stock || 0,
+    url: props.producto?.img_url || '',
   },
 })
 

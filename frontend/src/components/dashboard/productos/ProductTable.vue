@@ -25,7 +25,6 @@ const emit = defineEmits(['abrirConfirmarEliminar', 'abrirEditarProducto'])
         </tr>
       </thead>
       <tbody>
-        <!-- row 1 -->
         <tr v-for="producto in props.productos" :key="producto.id">
           <th>{{ producto.id }}</th>
           <td>{{ producto.nombre }}</td>
@@ -33,7 +32,7 @@ const emit = defineEmits(['abrirConfirmarEliminar', 'abrirEditarProducto'])
           <td>{{ producto.stock }}</td>
           <td>{{ producto.fecha_creacion }}</td>
           <td class="flex gap-2" id="btn-container">
-            <button class="btn btn-soft btn-info" @click="emit('abrirEditarProducto', producto.id)">
+            <button class="btn btn-soft btn-info" @click="emit('abrirEditarProducto', producto)">
               <PencilIcon :size="18" />
               Editar
             </button>

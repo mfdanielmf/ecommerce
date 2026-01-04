@@ -82,8 +82,12 @@ export const productStore = defineStore('productos', () => {
       toast.success(req.data.msg || 'Se ha editado el producto correctamente')
 
       productos.value[id] = req.data.producto
+
+      return true //Cerrar dialog
     } catch (e) {
       toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+
+      return false // Dejarlo abierto
     }
   }
 

@@ -21,6 +21,9 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  producto: {
+    type: Object,
+  },
 })
 
 const emit = defineEmits(['update:open', 'submitFormulario'])
@@ -50,7 +53,7 @@ function aceptarFormulario() {
         </DialogDescription>
 
         <!-- Formulario para introducir el producto -->
-        <ProductoForm ref="formRef" :funcion="props.funcion" />
+        <ProductoForm ref="formRef" :funcion="props.funcion" :producto="props.producto" />
 
         <div class="mt-6.25 flex justify-end gap-3">
           <DialogClose as-child>
