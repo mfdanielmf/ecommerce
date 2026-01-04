@@ -25,12 +25,13 @@ class Producto(db.Model):
     categoria = relationship(
         "Categoria", back_populates="productos", passive_deletes=True)
 
-    def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str):
+    def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str, id_categoria: int):
         self.nombre = nombre
         self.descripcion = descripcion
         self.precio = precio
         self.stock = stock
         self.img_url = img_url
+        self.id_categoria = id_categoria
 
     def to_dict(self):
         return {
@@ -40,5 +41,6 @@ class Producto(db.Model):
             'precio': self.precio,
             'stock': self.stock,
             'img_url': self.img_url,
-            'fecha_creacion': self.fecha_creacion
+            'fecha_creacion': self.fecha_creacion,
+            'id_categoria': self.id_categoria
         }
