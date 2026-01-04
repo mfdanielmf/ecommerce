@@ -15,6 +15,8 @@ const productoLocalStorage = computed(() => {
 })
 
 const añadirProductoCarrito = () => {
+  if (props.producto.stock === 0) return toast.error('No hay stock disponible para este producto')
+
   if (
     productoLocalStorage.value &&
     productoLocalStorage.value.cantidad + 1 > productoLocalStorage.value.stock
@@ -41,8 +43,12 @@ const añadirProductoCarrito = () => {
       <p class="h-15 overflow-hidden">{{ producto.descripcion }}</p>
       <div class="card-actions justify-between items-center">
         <p class="font-semibold text-xl">{{ producto.precio }} €</p>
-        <button class="btn btn-primary" @click.stop.prevent="añadirProductoCarrito">
-          Añadir al carrito
+        <button
+          class="btn btn-primary"
+          @click.stop.prevent="añadirProductoCarrito"
+          :disabled="producto.stock === 0"
+        >
+          {{ producto.stock > 0 ? 'Añadir al carrito' : 'Agotado' }}
         </button>
       </div>
     </div>

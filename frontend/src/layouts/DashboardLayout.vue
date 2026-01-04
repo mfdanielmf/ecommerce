@@ -1,6 +1,7 @@
 <script setup>
 import AsideItem from '@/components/dashboard/AsideItem.vue'
 import {
+  CpuIcon,
   FolderTreeIcon,
   LayoutDashboardIcon,
   MoveLeftIcon,
@@ -43,7 +44,7 @@ const titulo = computed(() => {
       </nav>
 
       <!-- Contenido principal -->
-      <RouterView class="p-4" />
+      <RouterView class="p-4 flex flex-col justify-self-center" />
     </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible">
@@ -53,13 +54,20 @@ const titulo = computed(() => {
       >
         <!-- Contenido sidebar -->
         <ul class="menu w-full grow">
-          <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" name-path="admin_dashboard" />
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <CpuIcon class="text-primary" />
+            <h1 class="is-drawer-close:hidden text-xl text-primary font-semibold">TechStore</h1>
+          </div>
 
-          <AsideItem :icon="PackageIcon" label="Productos" name-path="admin_productos" />
+          <div class="space-y-1">
+            <AsideItem :icon="LayoutDashboardIcon" label="Dashboard" name-path="admin_dashboard" />
 
-          <AsideItem :icon="FolderTreeIcon" label="Categorías" name-path="admin_categorias" />
+            <AsideItem :icon="PackageIcon" label="Productos" name-path="admin_productos" />
 
-          <AsideItem :icon="ShoppingCartIcon" label="Pedidos" name-path="admin_pedidos" />
+            <AsideItem :icon="FolderTreeIcon" label="Categorías" name-path="admin_categorias" />
+
+            <AsideItem :icon="ShoppingCartIcon" label="Pedidos" name-path="admin_pedidos" />
+          </div>
         </ul>
       </div>
     </div>

@@ -28,3 +28,11 @@ class UsuarioNoEncontradoException(Exception):
 
 class ContraseñaIncorrectaException(Exception):
     pass
+
+
+class CampoProductoIncorrectoException(Exception):
+    pass
+
+
+class ErrorInternoException(Exception):
+    pass

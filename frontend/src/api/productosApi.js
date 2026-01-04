@@ -7,4 +7,13 @@ export default {
   getProductoId(id) {
     return api().get(`/api/productos/${id}`)
   },
+  insertarProducto(data) {
+    return api().post('/api/productos/', data)
+  },
+  eliminarProductoId(id) {
+    return api().delete(`/api/productos/${id}`)
+  },
+  editarProductoId(id, data) {
+    return api().put(`/api/productos/${id}`, data)
+  },
 }
