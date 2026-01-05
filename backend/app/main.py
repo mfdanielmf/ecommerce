@@ -6,6 +6,7 @@ from app.config import config
 from app.routes.product_routes import producto_bp
 from app.routes.health_route import health_bp
 from app.routes.auth_routes import auth_bp
+from app.routes.category_routes import categoria_bp
 
 from decimal import Decimal
 
@@ -14,6 +15,7 @@ from flask_migrate import Migrate
 
 from app.models.producto import Producto
 from app.models.usuario import Usuario
+from app.models.categoria import Categoria
 
 app = Flask(__name__)
 
@@ -26,16 +28,21 @@ CORS(app, origins="http://localhost:5173", supports_credentials=True)
 
 
 app.register_blueprint(producto_bp, url_prefix="/api/productos")
+app.register_blueprint(categoria_bp, url_prefix="/api/categorias")
 app.register_blueprint(health_bp, url_prefix="/api/health")
 app.register_blueprint(auth_bp, url_prefix="/auth")
 
 
 @app.cli.command("crear-tablas")
 def crear_tablas():
-    db.drop_all()
-    db.create_all()
-
     URL = "https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+
+    categoria_temporal = Categoria(
+        "Electrónica", "Productos electrónicos varios")
+
+    db.session.add(categoria_temporal)
+    db.session.commit()
+    print("Categoría añdida correctamente!!!")
 
     productos_temporales = [
         Producto(
@@ -44,6 +51,7 @@ def crear_tablas():
             precio=Decimal("129.99"),
             stock=50,
             img_url=URL,
+            id_categoria=categoria_temporal.id
         ),
         Producto(
             nombre="Teclado mecánico",
@@ -51,6 +59,7 @@ def crear_tablas():
             precio=Decimal("85.00"),
             stock=30,
             img_url=URL,
+            id_categoria=categoria_temporal.id
         ),
         Producto(
             nombre="Reloj inteligente",
@@ -58,6 +67,7 @@ def crear_tablas():
             precio=Decimal("299.00"),
             stock=15,
             img_url=URL,
+            id_categoria=categoria_temporal.id
         ),
         Producto(
             nombre="Disco duro",
@@ -65,6 +75,7 @@ def crear_tablas():
             precio=Decimal("45.50"),
             stock=75,
             img_url=URL,
+            id_categoria=categoria_temporal.id
         ),
         Producto(
             nombre="Cargador para el móvil",
@@ -72,12 +83,13 @@ def crear_tablas():
             precio=Decimal("35.99"),
             stock=100,
             img_url=URL,
+            id_categoria=categoria_temporal.id
         )
     ]
 
     db.session.add_all(productos_temporales)
     db.session.commit()
-    print("Tablas creadas!!!")
+    print("Productos añadidos correctamente!!!")
 
 
 if __name__ == "__main__":

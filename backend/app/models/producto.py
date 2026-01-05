@@ -2,7 +2,8 @@ from datetime import datetime, timezone
 
 from app.db.db import db
 
-from sqlalchemy import DECIMAL, Column, DateTime, Integer, String
+from sqlalchemy import DECIMAL, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 
 class Producto(db.Model):
@@ -17,12 +18,20 @@ class Producto(db.Model):
     fecha_creacion = Column(
         DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
-    def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str):
+    # FK
+    id_categoria = Column(Integer, ForeignKey('categorias.id'), nullable=False)
+
+    # Un producto solo tiene 1 categoría y es obligatoria
+    categoria = relationship(
+        "Categoria", back_populates="productos", passive_deletes=True)
+
+    def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str, id_categoria: int):
         self.nombre = nombre
         self.descripcion = descripcion
         self.precio = precio
         self.stock = stock
         self.img_url = img_url
+        self.id_categoria = id_categoria
 
     def to_dict(self):
         return {
@@ -32,5 +41,6 @@ class Producto(db.Model):
             'precio': self.precio,
             'stock': self.stock,
             'img_url': self.img_url,
-            'fecha_creacion': self.fecha_creacion
+            'fecha_creacion': self.fecha_creacion,
+            'categoria': self.categoria.to_dict()
         }

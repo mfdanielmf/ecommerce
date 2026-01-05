@@ -1,5 +1,6 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import { useCategoriasStore } from '@/stores/categoriasStore'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
 import { defineAsyncComponent, onMounted, ref } from 'vue'
@@ -14,6 +15,9 @@ const ErrorMessage = defineAsyncComponent(() => import('@/components/common/Erro
 const ConfirmDialog = defineAsyncComponent(() => import('@/components/dashboard/ConfirmDialog.vue'))
 
 const productosStore = productStore()
+const categoriasStore = useCategoriasStore()
+
+const cargandoDatos = ref(true)
 
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
@@ -22,9 +26,13 @@ const productoEliminar = ref(null)
 const eliminando = ref(false)
 const productoEditar = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   productosStore.error = null
-  productosStore.fetchProductos()
+  categoriasStore.error = null
+
+  await Promise.all([productosStore.fetchProductos(), categoriasStore.fetchCategorias()])
+
+  cargandoDatos.value = false
 })
 
 async function añadirProducto(data) {
@@ -74,11 +82,13 @@ async function editarProducto(data) {
 </script>
 
 <template>
-  <div v-if="productosStore.cargando" class="h-screen grid place-content-center">
+  <div v-if="cargandoDatos" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
 
-  <ErrorMessage v-else-if="productosStore.error">{{ productosStore.error }}</ErrorMessage>
+  <ErrorMessage v-else-if="productosStore.error || categoriasStore.error">
+    {{ productosStore.error || categoriasStore.error }}
+  </ErrorMessage>
 
   <div v-else>
     <span>

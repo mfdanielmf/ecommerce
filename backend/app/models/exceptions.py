@@ -1,7 +1,10 @@
+
+# PRODUCTOS
 class ProductoNoEncontradoException(Exception):
     pass
 
 
+# AUTH
 class ContraseñasDiferentesException(Exception):
     pass
 
@@ -30,6 +33,12 @@ class ContraseñaIncorrectaException(Exception):
     pass
 
 
+# CATEGORÍAS
+class CategoriaNoEncontradaException(Exception):
+    pass
+
+
+# GENERAL
 class CampoProductoIncorrectoException(Exception):
     pass
 
