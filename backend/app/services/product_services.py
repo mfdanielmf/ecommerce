@@ -1,6 +1,7 @@
-from app.models.exceptions import CampoProductoIncorrectoException, ErrorInternoException, ProductoNoEncontradoException
+from app.models.exceptions import CampoProductoIncorrectoException, ErrorInternoException, ProductoNoEncontradoException, CategoriaNoEncontradaException
 from app.models.producto import Producto
 from app.repositories.product_repo import get_all_products, get_product_by_id, insert_product, delete_product, update_product
+from app.services.category_services import obtener_categoria_por_nombre
 
 
 def obtener_todos_los_productos() -> list[Producto]:
@@ -18,25 +19,30 @@ def obtener_producto_id(id: int) -> Producto | ProductoNoEncontradoException:
     return producto
 
 
-def insertar_producto_base(data) -> Producto | CampoProductoIncorrectoException | ErrorInternoException:
+def insertar_producto_base(data) -> Producto | CampoProductoIncorrectoException | ErrorInternoException | CategoriaNoEncontradaException:
     try:
         nombre: str = data["nombre"]
         descripcion: str = data["descripcion"]
         stock: int = int(data["stock"])
         precio: float = float(data["precio"])
         url_img: str = data["url"]
+        nombre_categoria: str = data["categoria"]
 
         if len(nombre) < 1 or len(nombre) > 50 or len(descripcion) < 1 or len(descripcion) > 500 or precio < 0 or precio > 99999999.99 or stock < 0 or len(url_img) < 1 or len(url_img) > 500:
             raise CampoProductoIncorrectoException()
 
+        categoria = obtener_categoria_por_nombre(nombre_categoria)
+
         producto = Producto(nombre=nombre, descripcion=descripcion,
-                            precio=precio, stock=stock, img_url=url_img)
+                            precio=precio, stock=stock, img_url=url_img, id_categoria=categoria.id)
 
         producto_insertado = insert_product(producto)
 
         return producto_insertado
     except ValueError:
         raise ErrorInternoException()
+    except CategoriaNoEncontradaException:
+        raise CategoriaNoEncontradaException()
 
 
 def eliminar_producto_base(id: int) -> None | ProductoNoEncontradoException:

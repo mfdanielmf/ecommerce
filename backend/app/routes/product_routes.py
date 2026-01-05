@@ -31,7 +31,7 @@ def get_producto_id(id):
 def post_insertar_producto():
     data = request.get_json()
 
-    if not data or not data.get("nombre") or not data.get("descripcion") or (data.get("stock") is None) or (data.get("precio") is None) or not data.get("url"):
+    if not data or not data.get("nombre") or not data.get("descripcion") or (data.get("stock") is None) or (data.get("precio") is None) or not data.get("url") or not data.get("categoria"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
     try:

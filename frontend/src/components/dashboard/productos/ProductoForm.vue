@@ -2,6 +2,7 @@
 import { configure, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import ProductoField from './ProductoField.vue'
+import { useCategoriasStore } from '@/stores/categoriasStore'
 
 const props = defineProps({
   funcion: {
@@ -22,6 +23,7 @@ const schema = yup.object({
     .string()
     .required('El nombre es obligatorio')
     .max(50, 'El tamaño máximo es de 50 carateres'),
+  categoria: yup.string().required('La categoría es obligatoria'),
   descripcion: yup
     .string()
     .required('La descripción es obligatoria')
@@ -59,6 +61,9 @@ const onSubmit = handleSubmit(async (data) => {
 })
 
 defineExpose({ onSubmit, isSubmitting })
+
+//Ya lo haré mas reutilizable
+const categoriasStore = useCategoriasStore()
 </script>
 
 <template>
@@ -70,6 +75,22 @@ defineExpose({ onSubmit, isSubmitting })
         label="Nombre *"
         placeholder="Introduce el nombre del producto"
       />
+
+      <ProductoField
+        nombre="categoria"
+        tipo="select"
+        label="Categoría *"
+        placeholder="Selecciona una categoría"
+      >
+        <option value="" disabled selected>Selecciona una categoría</option>
+        <option
+          v-for="categoria in categoriasStore.categorias"
+          :key="categoria.id"
+          :value="categoria.nombre"
+        >
+          {{ categoria.nombre }}
+        </option>
+      </ProductoField>
 
       <ProductoField
         nombre="descripcion"
