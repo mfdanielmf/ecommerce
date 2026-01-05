@@ -42,5 +42,5 @@ class Producto(db.Model):
             'stock': self.stock,
             'img_url': self.img_url,
             'fecha_creacion': self.fecha_creacion,
-            'id_categoria': self.id_categoria
+            'categoria': self.categoria.to_dict()
         }

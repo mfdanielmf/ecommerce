@@ -6,6 +6,7 @@ from app.config import config
 from app.routes.product_routes import producto_bp
 from app.routes.health_route import health_bp
 from app.routes.auth_routes import auth_bp
+from app.routes.category_routes import categoria_bp
 
 from decimal import Decimal
 
@@ -27,6 +28,7 @@ CORS(app, origins="http://localhost:5173", supports_credentials=True)
 
 
 app.register_blueprint(producto_bp, url_prefix="/api/productos")
+app.register_blueprint(categoria_bp, url_prefix="/api/categorias")
 app.register_blueprint(health_bp, url_prefix="/api/health")
 app.register_blueprint(auth_bp, url_prefix="/auth")
 
