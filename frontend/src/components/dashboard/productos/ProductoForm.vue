@@ -49,6 +49,7 @@ const { handleSubmit, isSubmitting } = useForm({
   validationSchema: schema,
   initialValues: {
     nombre: props.producto?.nombre || '',
+    categoria: props.producto?.categoria.nombre || '',
     descripcion: props.producto?.descripcion || '',
     precio: props.producto?.precio || 0.0,
     stock: props.producto?.stock || 0,
