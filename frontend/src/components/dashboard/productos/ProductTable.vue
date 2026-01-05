@@ -18,6 +18,7 @@ const emit = defineEmits(['abrirConfirmarEliminar', 'abrirEditarProducto'])
         <tr>
           <th></th>
           <th>Nombre</th>
+          <th>Categoría</th>
           <th>Precio</th>
           <th>Stock</th>
           <th>Fecha creación</th>
@@ -28,6 +29,7 @@ const emit = defineEmits(['abrirConfirmarEliminar', 'abrirEditarProducto'])
         <tr v-for="producto in props.productos" :key="producto.id">
           <th>{{ producto.id }}</th>
           <td>{{ producto.nombre }}</td>
+          <td>{{ producto.categoria.nombre }}</td>
           <td>{{ producto.precio }} €</td>
           <td>{{ producto.stock }}</td>
           <td>{{ producto.fecha_creacion }}</td>
