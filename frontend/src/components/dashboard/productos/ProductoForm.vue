@@ -1,7 +1,7 @@
 <script setup>
 import { configure, useForm } from 'vee-validate'
 import * as yup from 'yup'
-import ProductoField from './ProductoField.vue'
+import ProductoField from '../FormField.vue'
 import { useCategoriasStore } from '@/stores/categoriasStore'
 
 const props = defineProps({
@@ -63,7 +63,6 @@ const onSubmit = handleSubmit(async (data) => {
 
 defineExpose({ onSubmit, isSubmitting })
 
-//Ya lo haré mas reutilizable
 const categoriasStore = useCategoriasStore()
 </script>
 
