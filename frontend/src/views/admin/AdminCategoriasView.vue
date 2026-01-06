@@ -19,8 +19,14 @@ onMounted(() => {
 
 const añadirAbierto = ref(false)
 
-function añadirCategoria() {
-  console.log('test')
+async function añadirCategoria(data) {
+  const success = await categoriasStore.insertarCategoria(data)
+
+  if (success) {
+    añadirAbierto.value = false
+  } else {
+    añadirAbierto.value = true
+  }
 }
 
 function abrirConfirmarEliminar() {

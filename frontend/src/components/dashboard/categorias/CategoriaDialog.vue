@@ -53,8 +53,7 @@ function aceptarFormulario() {
         </DialogDescription>
 
         <!-- Formulario para introducir la categoría -->
-        <CategoriaForm />
-        <!-- <ProductoForm ref="formRef" :funcion="props.funcion" :categoria="props.categoria" /> -->
+        <CategoriaForm ref="formRef" :funcion="props.funcion" :categoria="props.categoria" />
 
         <div class="mt-6.25 flex justify-end gap-3">
           <DialogClose as-child>
