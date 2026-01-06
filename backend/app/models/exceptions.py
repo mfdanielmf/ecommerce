@@ -38,8 +38,12 @@ class CategoriaNoEncontradaException(Exception):
     pass
 
 
+class CategoriaYaExistenteException(Exception):
+    pass
+
+
 # GENERAL
-class CampoProductoIncorrectoException(Exception):
+class CampoIncorrectoException(Exception):
     pass
 
 
