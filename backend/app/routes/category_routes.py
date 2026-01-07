@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from app.models.exceptions import CampoIncorrectoException, CategoriaConProductosException, CategoriaYaExistenteException, CategoriaNoEncontradaException
-from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_categoria_base
+from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_categoria_base, actualizar_categoria
 
 from app.models.categoria import Categoria
 
@@ -47,4 +47,25 @@ def del_categoria(id):
     except CategoriaNoEncontradaException:
         return jsonify({"error": f"No se ha encontrado la categoría con id {id}"}), 404
     except CategoriaConProductosException:
-        return jsonify({"error": "Elimina los productos antes de borrar la categoría"}), 409
+        return jsonify({"error": "La categoría tiene productos. Elimínalos para continuar"}), 409
+
+
+# EDITAR CATEGORÍA
+@categoria_bp.route("/<int:id>", methods=["PUT"])
+def put_categoria(id):
+    data = request.get_json()
+
+    if not data or not data.get("nombre") or not data.get("descripcion"):
+        return jsonify({"error": "Faltan datos en la petición"}), 400
+
+    try:
+        categoria: Categoria = actualizar_categoria(data, id)
+
+        return jsonify({
+            "msg": "La categoría se ha actualizado correctamente",
+            "categoria": categoria.to_dict()
+        }), 200
+    except CampoIncorrectoException:
+        return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
+    except CategoriaNoEncontradaException:
+        return jsonify({"error": f"No se ha encontrado la categoría con id {id}"})

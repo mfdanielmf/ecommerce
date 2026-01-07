@@ -24,3 +24,9 @@ def insert_category(categoria: Categoria) -> Categoria:
 def delete_category(categoria: Categoria):
     db.session.delete(categoria)
     db.session.commit()
+
+
+def update_category(categoria: Categoria) -> Categoria:
+    db.session.commit()
+
+    return categoria
