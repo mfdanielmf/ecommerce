@@ -7,4 +7,7 @@ export default {
   insertarCategoria(data) {
     return api().post('/api/categorias/', data)
   },
+  eliminarCategoria(id) {
+    return api().delete(`/api/categorias/${id}`)
+  },
 }

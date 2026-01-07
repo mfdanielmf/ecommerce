@@ -42,5 +42,17 @@ export const useCategoriasStore = defineStore('categorias', () => {
     }
   }
 
-  return { categorias, cargando, error, fetchCategorias, insertarCategoria }
+  async function eliminarCategoria(id) {
+    try {
+      const req = await categoriasApi.eliminarCategoria(id)
+
+      toast.success(req.data.msg || 'Se ha eliminado la categoría correctamente')
+
+      delete categorias.value[id]
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+    }
+  }
+
+  return { categorias, cargando, error, fetchCategorias, insertarCategoria, eliminarCategoria }
 })
