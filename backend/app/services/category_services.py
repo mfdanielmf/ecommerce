@@ -71,11 +71,17 @@ def eliminar_categoria_base(id: int) -> CategoriaNoEncontradaException | Categor
         raise CategoriaNoEncontradaException()
 
 
-def actualizar_categoria(data, id: int) -> Categoria | CampoIncorrectoException | CategoriaNoEncontradaException:
+def actualizar_categoria(data, id: int) -> Categoria | CampoIncorrectoException | CategoriaNoEncontradaException | CategoriaYaExistenteException:
     data_correcta = data_categoria_es_correcta(data)
 
     if not data_correcta:
         raise CampoIncorrectoException()
+
+    # Si el nombre ya está elegido, salimos
+    categoria_base: Categoria = get_category_by_name(data["nombre"])
+
+    if categoria_base:
+        raise CategoriaYaExistenteException()
 
     try:
         categoria: Categoria = obtener_categoria_por_id(id)

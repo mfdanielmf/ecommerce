@@ -68,4 +68,6 @@ def put_categoria(id):
     except CampoIncorrectoException:
         return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
     except CategoriaNoEncontradaException:
-        return jsonify({"error": f"No se ha encontrado la categoría con id {id}"})
+        return jsonify({"error": f"No se ha encontrado la categoría con id {id}"}), 404
+    except CategoriaYaExistenteException:
+        return jsonify({"error": f"Ya existe una categoría con nombre {data['nombre']}"}), 409
