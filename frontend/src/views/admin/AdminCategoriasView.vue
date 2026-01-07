@@ -22,8 +22,10 @@ onMounted(() => {
 
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
+const editarAbierto = ref(false)
 const categoriaEliminar = ref(null)
 const eliminando = ref(false)
+const categoriaEditar = ref(null)
 
 async function añadirCategoria(data) {
   const success = await categoriasStore.insertarCategoria(data)
@@ -53,8 +55,18 @@ async function eliminarCategoria() {
   eliminarAbierto.value = false
 }
 
-function abrirEditarCategoria() {
-  console.log('test')
+function abrirEditarCategoria(categoria) {
+  if (!categoria) return
+
+  categoriaEditar.value = categoria
+  editarAbierto.value = true
+}
+
+async function editarCategoria(data) {
+  const success = await categoriasStore.editarCategoria(categoriaEditar.value.id, data)
+
+  if (success) editarAbierto.value = false
+  else editarAbierto.value = true
 }
 </script>
 
@@ -90,6 +102,19 @@ function abrirEditarCategoria() {
       texto-boton="Añadir Categoría"
     />
 
+    <!-- Editar dialog -->
+    <CategoriaDialog
+      v-model:open="editarAbierto"
+      v-if="editarAbierto"
+      :funcion="editarCategoria"
+      texto-boton="Editar Categoría"
+      :categoria="categoriaEditar"
+    >
+      <template #titulo>Editar una categoría</template>
+      <template #descripcion>Modifica los campos de la categoría</template>
+    </CategoriaDialog>
+
+    <!-- Para eliminar -->
     <ConfirmDialog
       v-model:open="eliminarAbierto"
       v-if="eliminarAbierto"

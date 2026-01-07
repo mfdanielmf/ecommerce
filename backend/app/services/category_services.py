@@ -80,7 +80,7 @@ def actualizar_categoria(data, id: int) -> Categoria | CampoIncorrectoException 
     # Si el nombre ya está elegido, salimos
     categoria_base: Categoria = get_category_by_name(data["nombre"])
 
-    if categoria_base:
+    if categoria_base and categoria_base.id != id:
         raise CategoriaYaExistenteException()
 
     try:
