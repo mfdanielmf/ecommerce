@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from app.models.exceptions import CampoIncorrectoException, CategoriaYaExistenteException
-from app.services.category_services import obtener_todas_categorias, insertar_categoria_base
+from app.models.exceptions import CampoIncorrectoException, CategoriaYaExistenteException, CategoriaNoEncontradaException
+from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_producto_base
 
 from app.models.categoria import Categoria
 
@@ -35,3 +35,14 @@ def post_categoria():
         return jsonify({"error": f"Ya existe una categoría con el nombre {data["nombre"]}"}), 409
     except CampoIncorrectoException:
         return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
+
+
+# DELETE CATEGORÍA
+@categoria_bp.route("/<int:id>", methods=["DELETE"])
+def del_categoria(id):
+    try:
+        eliminar_producto_base(id)
+
+        return jsonify({"msg": "Categoría eliminada correctamente"}), 200
+    except CategoriaNoEncontradaException:
+        return jsonify({"error": f"No se ha encontrado la categoría con id {id}"}), 404
