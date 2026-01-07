@@ -1,6 +1,6 @@
 from app.repositories.category_repo import get_all_categories, get_category_by_name, insert_category, get_category_by_id, delete_category
 from app.models.categoria import Categoria
-from app.models.exceptions import CampoIncorrectoException, CategoriaNoEncontradaException, CategoriaYaExistenteException
+from app.models.exceptions import CampoIncorrectoException, CategoriaNoEncontradaException, CategoriaYaExistenteException, CategoriaConProductosException
 
 
 def obtener_todas_categorias() -> list[Categoria]:
@@ -47,9 +47,12 @@ def insertar_categoria_base(data) -> Categoria | CampoIncorrectoException | Cate
     return categoria_final
 
 
-def eliminar_producto_base(id: int) -> CategoriaNoEncontradaException:
+def eliminar_categoria_base(id: int) -> CategoriaNoEncontradaException | CategoriaConProductosException:
     try:
-        categoria = obtener_categoria_por_id(id)
+        categoria: Categoria = obtener_categoria_por_id(id)
+
+        if (categoria.productos):
+            raise CategoriaConProductosException()
 
         delete_category(categoria)
     except CategoriaNoEncontradaException:

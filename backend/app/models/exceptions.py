@@ -42,6 +42,10 @@ class CategoriaYaExistenteException(Exception):
     pass
 
 
+class CategoriaConProductosException(Exception):
+    pass
+
+
 # GENERAL
 class CampoIncorrectoException(Exception):
     pass

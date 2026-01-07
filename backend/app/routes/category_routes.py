@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from app.models.exceptions import CampoIncorrectoException, CategoriaYaExistenteException, CategoriaNoEncontradaException
-from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_producto_base
+from app.models.exceptions import CampoIncorrectoException, CategoriaConProductosException, CategoriaYaExistenteException, CategoriaNoEncontradaException
+from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_categoria_base
 
 from app.models.categoria import Categoria
 
@@ -41,8 +41,10 @@ def post_categoria():
 @categoria_bp.route("/<int:id>", methods=["DELETE"])
 def del_categoria(id):
     try:
-        eliminar_producto_base(id)
+        eliminar_categoria_base(id)
 
         return jsonify({"msg": "Categoría eliminada correctamente"}), 200
     except CategoriaNoEncontradaException:
         return jsonify({"error": f"No se ha encontrado la categoría con id {id}"}), 404
+    except CategoriaConProductosException:
+        return jsonify({"error": "Elimina los productos antes de borrar la categoría"}), 409
