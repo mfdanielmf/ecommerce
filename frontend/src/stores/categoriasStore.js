@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import categoriasApi from '@/api/categoriasApi'
+import { toast } from 'vue-sonner'
 
 export const useCategoriasStore = defineStore('categorias', () => {
   const categorias = ref({})
@@ -25,5 +26,57 @@ export const useCategoriasStore = defineStore('categorias', () => {
     }
   }
 
-  return { categorias, cargando, error, fetchCategorias }
+  async function insertarCategoria(data) {
+    try {
+      const req = await categoriasApi.insertarCategoria(data)
+
+      toast.success(req.data.msg || 'Se ha insertado la categoría correctamente')
+
+      categorias.value[req.data.categoria.id] = req.data.categoria
+
+      return true //Éxito (cerrar el diálogo de insertar categoría)
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+
+      return false //Fallo (dejar el diálogo abierto)
+    }
+  }
+
+  async function eliminarCategoria(id) {
+    try {
+      const req = await categoriasApi.eliminarCategoria(id)
+
+      toast.success(req.data.msg || 'Se ha eliminado la categoría correctamente')
+
+      delete categorias.value[id]
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+    }
+  }
+
+  async function editarCategoria(id, data) {
+    try {
+      const req = await categoriasApi.editarCategoria(id, data)
+
+      toast.success(req.data.msg || 'Se ha editado la categoría correctamente')
+
+      categorias.value[id] = req.data.categoria
+
+      return true //Cerrar diálogo
+    } catch (e) {
+      toast.error(e.response?.data?.error || 'Ocurrió un error inesperado')
+
+      return false //Dejar diálogo abierto
+    }
+  }
+
+  return {
+    categorias,
+    cargando,
+    error,
+    fetchCategorias,
+    insertarCategoria,
+    eliminarCategoria,
+    editarCategoria,
+  }
 })

@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from app.models.exceptions import ErrorInternoException, ProductoNoEncontradoException, CampoProductoIncorrectoException
+from app.models.exceptions import ErrorInternoException, ProductoNoEncontradoException, CampoIncorrectoException
 from app.models.producto import Producto
 from app.services.product_services import obtener_todos_los_productos, obtener_producto_id, insertar_producto_base, eliminar_producto_base, actualizar_datos_producto
 
@@ -41,7 +41,7 @@ def post_insertar_producto():
             "msg": "Producto añadido correctamente",
             "producto": producto.to_dict()
         }), 200
-    except CampoProductoIncorrectoException:
+    except CampoIncorrectoException:
         return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
     except ErrorInternoException:
         return jsonify({"error": "Ha ocurrido un error en la petición"}), 500
@@ -64,7 +64,7 @@ def delete_producto(id):
 def actualizar_producto(id):
     data = request.get_json()
 
-    if not data or not data.get("nombre") or not data.get("descripcion") or (data.get("stock") is None) or (data.get("precio") is None) or not data.get("url"):
+    if not data or not data.get("nombre") or not data.get("descripcion") or (data.get("stock") is None) or (data.get("precio") is None) or not data.get("url") or not data.get("categoria"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
     try:
@@ -77,7 +77,7 @@ def actualizar_producto(id):
 
     except ProductoNoEncontradoException:
         return jsonify({"error": f"No se ha encontrado el producto con id {id}"}), 404
-    except CampoProductoIncorrectoException:
+    except CampoIncorrectoException:
         return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
     except ErrorInternoException:
         return jsonify({"error": "Ha ocurrido un error en la petición"}), 500

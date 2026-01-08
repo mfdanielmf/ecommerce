@@ -6,5 +6,27 @@ def get_all_categories() -> list[Categoria]:
     return Categoria.query.all()
 
 
+def get_category_by_id(id: int) -> Categoria | None:
+    return Categoria.query.get(id)
+
+
 def get_category_by_name(nombre: str) -> Categoria | None:
     return Categoria.query.filter_by(nombre=nombre).first()
+
+
+def insert_category(categoria: Categoria) -> Categoria:
+    db.session.add(categoria)
+    db.session.commit()
+
+    return categoria
+
+
+def delete_category(categoria: Categoria):
+    db.session.delete(categoria)
+    db.session.commit()
+
+
+def update_category(categoria: Categoria) -> Categoria:
+    db.session.commit()
+
+    return categoria
