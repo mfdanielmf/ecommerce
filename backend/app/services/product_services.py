@@ -1,3 +1,4 @@
+from app.models.categoria import Categoria
 from app.models.exceptions import CampoIncorrectoException, ErrorInternoException, ProductoNoEncontradoException, CategoriaNoEncontradaException
 from app.models.producto import Producto
 from app.repositories.product_repo import get_all_products, get_product_by_id, insert_product, delete_product, update_product
@@ -63,16 +64,24 @@ def actualizar_datos_producto(id: int, data) -> Producto | ProductoNoEncontradoE
         precio: float = float(data["precio"])
         stock: int = int(data["stock"])
         img_url: str = data["url"]
+        nombre_categoria: str = data["categoria"]
 
         if len(nombre) < 1 or len(nombre) > 50 or len(descripcion) < 1 or len(descripcion) > 500 or precio < 0 or precio > 99999999.99 or stock < 0 or len(img_url) < 1 or len(img_url) > 500:
             raise CampoIncorrectoException()
 
-        # Actualizamos los datos del producto y llamamos al repo para que haga commit de los cambios
-        producto.nombre = nombre
-        producto.descripcion = descripcion
-        producto.precio = precio
-        producto.stock = stock
-        producto.img_url = img_url
+        try:
+            categoria: Categoria = obtener_categoria_por_nombre(
+                nombre_categoria)
+
+            # Actualizamos los datos del producto y llamamos al repo para que haga commit de los cambios
+            producto.nombre = nombre
+            producto.descripcion = descripcion
+            producto.precio = precio
+            producto.stock = stock
+            producto.img_url = img_url
+            producto.id_categoria = categoria.id
+        except CategoriaNoEncontradaException:
+            raise CampoIncorrectoException()
 
         producto_actualizado: Producto = update_product(producto)
 
