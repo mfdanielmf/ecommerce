@@ -122,7 +122,7 @@ async function editarProducto(data) {
     </ProductoDialog>
 
     <ProductTable
-      :productos="productosStore.productos"
+      :productos="productosStore.productosConCategoria"
       v-if="Object.keys(productosStore.productos).length > 0"
       @abrir-confirmar-eliminar="abrirConfirmarEliminar"
       @abrir-editar-producto="abrirEditarProducto"

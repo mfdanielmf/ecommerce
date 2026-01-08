@@ -1,12 +1,25 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import productosApi from '@/api/productosApi'
 import { toast } from 'vue-sonner'
+import { useCategoriasStore } from './categoriasStore'
 
 export const productStore = defineStore('productos', () => {
   const productos = ref({})
   const error = ref(null)
   const cargando = ref(false)
+
+  const categoriasStore = useCategoriasStore()
+
+  //Getter para tener los productos con los datos de las categorías actualizadas
+  const productosConCategoria = computed(() => {
+    return Object.values(productos.value).map((producto) => {
+      return {
+        ...producto,
+        categoria: categoriasStore.categorias[producto.id_categoria],
+      }
+    })
+  })
 
   //TODOS
   async function fetchProductos() {
@@ -91,6 +104,7 @@ export const productStore = defineStore('productos', () => {
 
   return {
     productos,
+    productosConCategoria,
     error,
     cargando,
     fetchProductos,
