@@ -19,7 +19,7 @@ const authStore = useAuthStore()
     <LoadingSpinner v-if="authStore.cargandoUsuario" />
 
     <RouterLink
-      v-else-if="!authStore.usuario"
+      v-else-if="!authStore.usuarioCargado"
       :to="{ name: 'login' }"
       class="group flex items-center btn bg-neutral-900 text-white border-none hover:bg-neutral-800"
     >

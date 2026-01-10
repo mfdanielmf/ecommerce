@@ -7,7 +7,8 @@ import router from '@/router'
 export const useAuthStore = defineStore('auth', () => {
   const nombreUsuarioTemporal = ref(null)
   const usuario = ref(null)
-  const cargandoUsuario = ref(false)
+  const cargandoUsuario = ref(true)
+  const usuarioCargado = ref(false)
 
   async function iniciarSesion(data) {
     try {
@@ -16,12 +17,16 @@ export const useAuthStore = defineStore('auth', () => {
       toast.success(req.data.msg || 'Has iniciado sesión correctamente')
 
       usuario.value = req.data.usuario
+      usuarioCargado.value = true
 
       await router.push({ name: 'lista_productos' })
     } catch (e) {
       toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
         position: 'top-right',
       })
+
+      usuario.value = null
+      usuarioCargado.value = false
     }
   }
 
@@ -49,6 +54,7 @@ export const useAuthStore = defineStore('auth', () => {
       toast.success(req.data.msg)
 
       usuario.value = null
+      usuarioCargado.value = false
 
       await router.push({ name: 'login' })
     } catch {
@@ -58,12 +64,30 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function cargarUsuario() {
+    cargandoUsuario.value = true
+
+    try {
+      const req = await authApi.obtenerUsuario()
+
+      usuario.value = req.data.usuario
+      usuarioCargado.value = true
+    } catch {
+      usuario.value = null
+      usuarioCargado.value = false
+    } finally {
+      cargandoUsuario.value = false
+    }
+  }
+
   return {
     nombreUsuarioTemporal,
     usuario,
     cargandoUsuario,
+    usuarioCargado,
     iniciarSesion,
     registrarUsuario,
     cerrarSesion,
+    cargarUsuario,
   }
 })
