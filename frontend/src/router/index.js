@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/authStore'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const MainLayout = () => import('@/layouts/MainLayout.vue')
@@ -14,8 +15,6 @@ const AdminDashboardView = () => import('@/views/admin/AdminDashboardView.vue')
 const AdminProductosView = () => import('@/views/admin/AdminProductosView.vue')
 const AdminCategoriasView = () => import('@/views/admin/AdminCategoriasView.vue')
 const AdminPedidosView = () => import('@/views/admin/AdminPedidosView.vue')
-
-// ------------ACORDARME DE IMPLEMENTAR LÓGICA PARA NO PERMITIR EL ACCESO AL DASH MIENTRAS NO SE CARGUE EL USUARIO Y NO SEA ADMIN!!!!!!!!!! (PONDRÉ UN SPINNER O ALGO ASÍ. YA VERÉ) ---------------------
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +73,7 @@ const router = createRouter({
       path: '/admin',
       component: DashboardLayout,
       redirect: { name: 'admin_dashboard' },
+      meta: { authRequired: true, adminRequired: true },
       children: [
         {
           path: 'dashboard',
@@ -110,6 +110,18 @@ const router = createRouter({
       ],
     },
   ],
+})
+
+router.beforeEach(async (to) => {
+  const authStore = useAuthStore()
+
+  if (to.meta.authRequired) {
+    await authStore.cargarUsuario()
+
+    if (!authStore.usuarioCargado) {
+      return { name: 'login', query: { redirect: to.fullPath } }
+    }
+  }
 })
 
 export default router

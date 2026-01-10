@@ -7,8 +7,9 @@ import router from '@/router'
 export const useAuthStore = defineStore('auth', () => {
   const nombreUsuarioTemporal = ref(null)
   const usuario = ref(null)
-  const cargandoUsuario = ref(true)
+  const cargandoUsuario = ref(false)
   const usuarioCargado = ref(false)
+  let promesa = null
 
   async function iniciarSesion(data) {
     try {
@@ -65,8 +66,16 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function cargarUsuario() {
-    cargandoUsuario.value = true
+    if (usuarioCargado.value) return
 
+    // Evitamos que se haga un doble fetch a /me. Si ya estamos ejecutando la promesa, devolvemos esa misma
+    if (promesa) return promesa
+
+    cargandoUsuario.value = true
+    promesa = ejecutarPeticion()
+  }
+
+  async function ejecutarPeticion() {
     try {
       const req = await authApi.obtenerUsuario()
 
