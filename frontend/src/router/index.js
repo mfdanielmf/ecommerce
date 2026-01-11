@@ -15,6 +15,7 @@ const AdminDashboardView = () => import('@/views/admin/AdminDashboardView.vue')
 const AdminProductosView = () => import('@/views/admin/AdminProductosView.vue')
 const AdminCategoriasView = () => import('@/views/admin/AdminCategoriasView.vue')
 const AdminPedidosView = () => import('@/views/admin/AdminPedidosView.vue')
+const ForbiddenView = () => import('@/views/ForbiddenView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -61,6 +62,11 @@ const router = createRouter({
               },
             },
           ],
+        },
+        {
+          path: '/forbidden',
+          name: 'forbidden',
+          component: ForbiddenView,
         },
         {
           path: '/:pathMatch(.*)*',
@@ -121,6 +127,8 @@ router.beforeEach(async (to) => {
     if (!authStore.usuarioCargado) {
       return { name: 'login', query: { redirect: to.fullPath } }
     }
+
+    if (authStore.usuario.rol !== 'admin') return { name: 'forbidden' }
   }
 })
 
