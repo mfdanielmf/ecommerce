@@ -9,6 +9,7 @@ import {
 } from 'radix-vue'
 import { LogOutIcon } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   nombre: {
@@ -17,10 +18,14 @@ const props = defineProps({
   },
 })
 
+const router = useRouter()
+
 const toggleState = ref(false)
 
 async function handleLogout() {
-  await useAuthStore().cerrarSesion()
+  const success = await useAuthStore().cerrarSesion()
+
+  if (success) await router.push({ name: 'login' })
 }
 </script>
 

@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import authApi from '@/api/authApi'
 import { toast } from 'vue-sonner'
-import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
   const nombreUsuarioTemporal = ref(null)
@@ -20,7 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
       usuario.value = req.data.usuario
       usuarioCargado.value = true
 
-      await router.push({ name: 'lista_productos' })
+      return true //Redirigir a productos o a la url que intentó acceder
     } catch (e) {
       toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
         position: 'top-right',
@@ -28,6 +27,8 @@ export const useAuthStore = defineStore('auth', () => {
 
       usuario.value = null
       usuarioCargado.value = false
+
+      return false //No redirigir
     }
   }
 
@@ -39,11 +40,13 @@ export const useAuthStore = defineStore('auth', () => {
 
       nombreUsuarioTemporal.value = req.data.usuario.nombre
 
-      await router.push({ name: 'login' })
+      return true //Redirigir a login
     } catch (e) {
       toast.error(e.response?.data?.error || 'Ocurrió un error inesperado', {
         position: 'top-right',
       })
+
+      return false // No redirigir
     }
   }
 
@@ -57,9 +60,11 @@ export const useAuthStore = defineStore('auth', () => {
       usuario.value = null
       usuarioCargado.value = false
 
-      await router.push({ name: 'login' })
+      return true //Redirigir a login
     } catch {
       toast.error('Ha ocurrido un error al cerrar sesión')
+
+      return false //No redirigir
     } finally {
       cargandoUsuario.value = false
     }

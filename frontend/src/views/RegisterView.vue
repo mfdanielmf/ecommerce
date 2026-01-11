@@ -4,8 +4,10 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 const nombreInput = ref(null)
 
@@ -43,7 +45,9 @@ onMounted(() => {
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  await authStore.registrarUsuario(data)
+  const success = await authStore.registrarUsuario(data)
+
+  if (success) await router.push({ name: 'login' })
 })
 </script>
 

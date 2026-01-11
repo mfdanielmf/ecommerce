@@ -1,3 +1,12 @@
+<script setup>
+import { onMounted } from 'vue'
+import { toast } from 'vue-sonner'
+
+onMounted(() => {
+  toast.warning('¡La vista a la que intentas acceder solo está disponible para admins!')
+})
+</script>
+
 <template>
   <main class="h-screen grid place-content-center text-center">
     <p class="text-[64px] font-semibold text-neutral-700">403</p>
