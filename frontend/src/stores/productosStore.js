@@ -8,6 +8,7 @@ export const productStore = defineStore('productos', () => {
   const productos = ref({})
   const error = ref(null)
   const cargando = ref(false)
+  const listaCargada = ref(false)
 
   const categoriasStore = useCategoriasStore()
 
@@ -23,7 +24,7 @@ export const productStore = defineStore('productos', () => {
 
   //TODOS
   async function fetchProductos() {
-    if (Object.keys(productos.value).length > 0) return
+    if (listaCargada.value) return
 
     cargando.value = true
     try {
@@ -31,6 +32,8 @@ export const productStore = defineStore('productos', () => {
       productosFetch.data.products.forEach((p) => {
         productos.value[p.id] = p
       })
+
+      listaCargada.value = true
     } catch {
       error.value = 'Error al obtener la lista de productos'
     } finally {
