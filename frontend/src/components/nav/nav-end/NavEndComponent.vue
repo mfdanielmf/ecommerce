@@ -27,6 +27,6 @@ const authStore = useAuthStore()
       <p>Iniciar sesión</p>
     </RouterLink>
 
-    <ProfileComponent v-else :nombre="authStore.usuario.nombre[0]" />
+    <ProfileComponent v-else :usuario="authStore.usuario" />
   </div>
 </template>

@@ -6,7 +6,7 @@ import { toast } from 'vue-sonner'
 export const useAuthStore = defineStore('auth', () => {
   const nombreUsuarioTemporal = ref(null)
   const usuario = ref(null)
-  const cargandoUsuario = ref(false)
+  const cargandoUsuario = ref(true)
   const usuarioCargado = ref(false)
   let promesa = null
 
