@@ -38,3 +38,10 @@ def comprobar_login(nombre: str, contraseña: str) -> Usuario | LongitudNombreIn
         raise ContraseñaIncorrectaException()
 
     return usuario
+
+
+def comprobar_usuario_es_admin(data: str) -> bool:
+    if not data or data["rol"] != "admin":
+        return False
+
+    return True
