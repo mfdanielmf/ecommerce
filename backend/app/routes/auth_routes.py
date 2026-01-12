@@ -17,7 +17,8 @@ def login():
     try:
         usuario = comprobar_login(data["nombre"], data["contraseña"])
 
-        token = create_access_token(str(usuario.id))
+        token = create_access_token(identity=str(
+            usuario.id), additional_claims={"rol": usuario.rol})
 
         response = make_response(jsonify({
             "msg": "Has iniciado sesión correctamente",

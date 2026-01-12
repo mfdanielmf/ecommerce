@@ -4,10 +4,15 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
 
 const authStore = useAuthStore()
 const inputUsuario = ref(null)
 const inputContraseña = ref(null)
+
+const router = useRouter()
+const route = useRoute()
 
 const schema = yup.object({
   nombre: yup
@@ -29,6 +34,8 @@ const [nombreUsuario, nombreUsuarioProps] = defineField('nombre')
 const [contraseña, contraseñaProps] = defineField('contraseña')
 
 onMounted(() => {
+  if (route.query.redirect) toast.warning('Inicia sesión para acceder aquí')
+
   if (!authStore.nombreUsuarioTemporal) {
     inputUsuario.value?.focus()
 
@@ -41,7 +48,9 @@ onMounted(() => {
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  await authStore.iniciarSesion(data)
+  const success = await authStore.iniciarSesion(data)
+
+  if (success) await router.push(route.query.redirect || { name: 'lista_productos' })
 })
 </script>
 

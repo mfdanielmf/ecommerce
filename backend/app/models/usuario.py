@@ -15,10 +15,11 @@ class Usuario(db.Model):
     fecha_creacion = Column(
         DateTime, default=lambda: datetime.now(timezone.utc))
 
-    def __init__(self, nombre: str, correo: str, contraseña: str):
+    def __init__(self, nombre: str, correo: str, contraseña: str, rol: str = "usuario"):
         self.nombre = nombre
         self.correo = correo
         self.contraseña = generate_password_hash(password=contraseña)
+        self.rol = rol
 
     def comprobar_contraseña(self, contraseña: str) -> bool:
         return check_password_hash(self.contraseña, contraseña)

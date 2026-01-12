@@ -92,5 +92,17 @@ def crear_tablas():
     print("Productos añadidos correctamente!!!")
 
 
+@app.cli.command("crear-admin")
+def crear_admin():
+    admin = Usuario("admin", "admin@admin.com", "111111", "admin")
+    db.session.add(admin)
+    db.session.commit()
+
+    print("""Se creado el usuario admin.
+Nombre de usuario: admin
+Contraseña: 111111
+""")
+
+
 if __name__ == "__main__":
     app.run('0.0.0.0', 8080)

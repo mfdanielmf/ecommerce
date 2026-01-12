@@ -17,8 +17,6 @@ const route = useRoute()
 const titulo = computed(() => {
   return route.meta.titulo
 })
-
-// ------------ACORDARME DE IMPLEMENTAR LÓGICA PARA NO PERMITIR EL ACCESO AL DASH MIENTRAS NO SE CARGUE EL USUARIO Y NO SEA ADMIN!!!!!!!!!! (PONDRÉ UN SPINNER O ALGO ASÍ. YA VERÉ) ---------------------
 </script>
 
 <template>
