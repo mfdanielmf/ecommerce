@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from app.models.usuario import Usuario
 from app.repositories.user_repo import find_user_id
 from app.services.auth_services import validar_usuario, comprobar_login, insertar_usuario_base
-from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
+from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, NombreYaUsadoException
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -16,7 +16,7 @@ def login():
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
     try:
-        usuario = comprobar_login(data["nombre"], data["contraseña"])
+        usuario = comprobar_login(data)
 
         token = create_access_token(identity=str(
             usuario.id), additional_claims={"rol": usuario.rol})
@@ -30,14 +30,8 @@ def login():
 
         return response
 
-    except LongitudNombreIncorrectaException:
-        return jsonify({"error": "Longitud del nombre incorrecta"}), 422
-    except LongitudContraseñaIncorrectaException:
-        return jsonify({"error": "Longitud de la contraseña incorrecta"}), 422
-    except UsuarioNoEncontradoException:
-        return jsonify({"error": f"No se ha encontrado el usuario {data['nombre']}"}), 404
-    except ContraseñaIncorrectaException:
-        return jsonify({"error": "Contraseña incorrecta"}), 422
+    except CampoIncorrectoException:
+        return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
 
 
 @auth_bp.route("/register", methods=["POST"])
@@ -70,7 +64,7 @@ def register():
 def me():
     id_usuario = int(get_jwt_identity())
 
-    usuario = find_user_id(id_usuario)
+    usuario: Usuario = find_user_id(id_usuario)
 
     if not usuario:
         return jsonify({"error": "Usuario no existe"}, 404)

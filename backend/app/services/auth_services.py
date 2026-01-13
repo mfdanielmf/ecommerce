@@ -1,4 +1,4 @@
-from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, UsuarioNoEncontradoException, LongitudNombreIncorrectaException, NombreYaUsadoException, LongitudContraseñaIncorrectaException, ContraseñaIncorrectaException
+from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, NombreYaUsadoException
 from app.models.usuario import Usuario
 from app.repositories.user_repo import find_user_name, find_user_correo, insert_user
 
@@ -21,20 +21,20 @@ def validar_usuario(data) -> Usuario | CampoIncorrectoException | NombreYaUsadoE
     return Usuario(nombre=nombre, correo=correo, contraseña=contraseña)
 
 
-def comprobar_login(nombre: str, contraseña: str) -> Usuario | LongitudNombreIncorrectaException | LongitudContraseñaIncorrectaException | UsuarioNoEncontradoException | ContraseñaIncorrectaException:
-    if len(nombre) < 4 or len(nombre) > 20:
-        raise LongitudNombreIncorrectaException()
+def comprobar_login(data) -> Usuario | CampoIncorrectoException:
+    nombre: str = str(data["nombre"])
+    contraseña: str = str(data["contraseña"])
 
-    if len(contraseña) < 6:
-        raise LongitudContraseñaIncorrectaException()
+    if len(nombre) < 4 or len(nombre) > 20 or len(contraseña) < 6:
+        raise CampoIncorrectoException()
 
-    usuario = find_user_name(nombre)
+    usuario: Usuario = find_user_name(nombre)
 
     if not usuario:
-        raise UsuarioNoEncontradoException()
+        raise CampoIncorrectoException()
 
     if not usuario.comprobar_contraseña(contraseña):
-        raise ContraseñaIncorrectaException()
+        raise CampoIncorrectoException()
 
     return usuario
 
