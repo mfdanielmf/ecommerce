@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, set_access_cookies, unset_jwt_cookies
 from app.models.usuario import Usuario
-from app.repositories.user_repo import find_user_id
-from app.services.auth_services import validar_usuario, comprobar_login, insertar_usuario_base
-from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, NombreYaUsadoException
+from app.services.auth_services import validar_usuario, comprobar_login
+from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, NombreYaUsadoException, UsuarioNoExistenteException
+from app.services.user_services import buscar_usuario_id, insertar_usuario_base
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -64,12 +64,12 @@ def register():
 def me():
     id_usuario = int(get_jwt_identity())
 
-    usuario: Usuario = find_user_id(id_usuario)
+    try:
+        usuario: Usuario = buscar_usuario_id(id_usuario)
 
-    if not usuario:
+        return jsonify({"usuario": usuario.to_dict()})
+    except UsuarioNoExistenteException:
         return jsonify({"error": "Usuario no existe"}, 404)
-
-    return jsonify({"usuario": usuario.to_dict()})
 
 
 @auth_bp.route("/logout", methods=["POST"])

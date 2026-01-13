@@ -4,6 +4,11 @@ class ProductoNoEncontradoException(Exception):
     pass
 
 
+# USUARIOS
+class UsuarioNoExistenteException(Exception):
+    pass
+
+
 # AUTH
 class ContraseñasDiferentesException(Exception):
     pass
