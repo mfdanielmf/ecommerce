@@ -8,7 +8,7 @@ const VaciarCarritoDialog = defineAsyncComponent(() => import('./VaciarCarritoDi
 
 const store = carritoStore()
 
-const carritoAbierto = ref(false)
+const vaciarAbierto = ref(false)
 
 function eliminarProducto(id) {
   store.eliminarProductoCarrito(id)
@@ -87,7 +87,7 @@ function vaciarCarrito() {
 
   <div class="mt-5 flex flex-col gap-2">
     <button class="btn btn-primary">Finalizar Compra</button>
-    <button class="btn btn-error" @click="carritoAbierto = true">Vaciar Carrito</button>
-    <VaciarCarritoDialog v-model:open="carritoAbierto" @vaciar-carrito="vaciarCarrito" />
+    <button class="btn btn-error" @click="vaciarAbierto = true">Vaciar Carrito</button>
+    <VaciarCarritoDialog v-model:open="vaciarAbierto" @vaciar-carrito="vaciarCarrito" v-if="vaciarAbierto"/>
   </div>
 </template>
