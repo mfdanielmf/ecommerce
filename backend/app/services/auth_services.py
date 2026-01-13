@@ -1,6 +1,6 @@
 from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, UsuarioNoEncontradoException, LongitudNombreIncorrectaException, NombreYaUsadoException, LongitudContraseñaIncorrectaException, ContraseñaIncorrectaException
 from app.models.usuario import Usuario
-from app.repositories.user_repo import find_user_name, find_user_correo
+from app.repositories.user_repo import find_user_name, find_user_correo, insert_user
 
 
 def validar_usuario(data) -> Usuario | CampoIncorrectoException | NombreYaUsadoException | CorreoYaUsadoException:
@@ -44,3 +44,9 @@ def comprobar_usuario_es_admin(data: str) -> bool:
         return False
 
     return True
+
+
+def insertar_usuario_base(usuario: Usuario) -> Usuario:
+    usuario = insert_user(usuario)
+
+    return usuario

@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, set_access_cookies, unset_jwt_cookies
-from app.repositories.user_repo import insert_user, find_user_id
-from app.services.auth_services import validar_usuario, comprobar_login
-from app.models.exceptions import CampoIncorrectoException, ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
+from app.models.usuario import Usuario
+from app.repositories.user_repo import find_user_id
+from app.services.auth_services import validar_usuario, comprobar_login, insertar_usuario_base
+from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -47,9 +48,9 @@ def register():
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
     try:
-        usuario = validar_usuario(data)
+        usuario: Usuario = validar_usuario(data)
 
-        usuario_insertado = insert_user(usuario)
+        usuario_insertado: Usuario = insertar_usuario_base(usuario)
 
         return jsonify({
             "msg": "Usuario registrado correctamente",
