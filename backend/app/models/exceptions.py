@@ -4,12 +4,13 @@ class ProductoNoEncontradoException(Exception):
     pass
 
 
-# AUTH
-class ContraseñasDiferentesException(Exception):
+# USUARIOS
+class UsuarioNoExistenteException(Exception):
     pass
 
 
-class LongitudNombreIncorrectaException(Exception):
+# AUTH
+class ContraseñasDiferentesException(Exception):
     pass
 
 
@@ -18,18 +19,6 @@ class NombreYaUsadoException(Exception):
 
 
 class CorreoYaUsadoException(Exception):
-    pass
-
-
-class LongitudContraseñaIncorrectaException(Exception):
-    pass
-
-
-class UsuarioNoEncontradoException(Exception):
-    pass
-
-
-class ContraseñaIncorrectaException(Exception):
     pass
 
 

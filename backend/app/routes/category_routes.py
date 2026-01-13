@@ -3,9 +3,9 @@ from flask_jwt_extended import get_jwt, jwt_required
 
 from app.models.exceptions import CampoIncorrectoException, CategoriaConProductosException, CategoriaYaExistenteException, CategoriaNoEncontradaException
 from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_categoria_base, actualizar_categoria
-from app.services.auth_services import comprobar_usuario_es_admin
 
 from app.models.categoria import Categoria
+from app.services.user_services import comprobar_usuario_es_admin
 
 categoria_bp = Blueprint("categorias", __name__)
 

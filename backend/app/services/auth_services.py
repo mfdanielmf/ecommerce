@@ -1,11 +1,16 @@
-from app.models.exceptions import CorreoYaUsadoException, UsuarioNoEncontradoException, ContraseñasDiferentesException, LongitudNombreIncorrectaException, NombreYaUsadoException, LongitudContraseñaIncorrectaException, ContraseñaIncorrectaException
+from app.models.exceptions import CampoIncorrectoException, CorreoYaUsadoException, NombreYaUsadoException
 from app.models.usuario import Usuario
 from app.repositories.user_repo import find_user_name, find_user_correo
 
 
-def validar_usuario(nombre: str, correo: str, contraseña: str, contraseña_repetir: str) -> Usuario | LongitudNombreIncorrectaException | NombreYaUsadoException | CorreoYaUsadoException | LongitudContraseñaIncorrectaException | ContraseñasDiferentesException:
-    if len(nombre) < 4 or len(nombre) > 20:
-        raise LongitudNombreIncorrectaException()
+def validar_usuario(data) -> Usuario | CampoIncorrectoException | NombreYaUsadoException | CorreoYaUsadoException:
+    nombre: str = str(data["nombre"])
+    correo: str = str(data["correo"])
+    contraseña: str = str(data["contraseña"])
+    contraseña_repetir: str = str(data["contraseña_repetir"])
+
+    if len(nombre) < 4 or len(nombre) > 20 or len(contraseña) < 6 or contraseña != contraseña_repetir:
+        raise CampoIncorrectoException()
 
     if find_user_name(nombre):
         raise NombreYaUsadoException()
@@ -13,35 +18,22 @@ def validar_usuario(nombre: str, correo: str, contraseña: str, contraseña_repe
     if find_user_correo(correo):
         raise CorreoYaUsadoException()
 
-    if len(contraseña) < 6:
-        raise LongitudContraseñaIncorrectaException()
-
-    if contraseña != contraseña_repetir:
-        raise ContraseñasDiferentesException()
-
     return Usuario(nombre=nombre, correo=correo, contraseña=contraseña)
 
 
-def comprobar_login(nombre: str, contraseña: str) -> Usuario | LongitudNombreIncorrectaException | LongitudContraseñaIncorrectaException | UsuarioNoEncontradoException | ContraseñaIncorrectaException:
-    if len(nombre) < 4 or len(nombre) > 20:
-        raise LongitudNombreIncorrectaException()
+def comprobar_login(data) -> Usuario | CampoIncorrectoException:
+    nombre: str = str(data["nombre"])
+    contraseña: str = str(data["contraseña"])
 
-    if len(contraseña) < 6:
-        raise LongitudContraseñaIncorrectaException()
+    if len(nombre) < 4 or len(nombre) > 20 or len(contraseña) < 6:
+        raise CampoIncorrectoException()
 
-    usuario = find_user_name(nombre)
+    usuario: Usuario = find_user_name(nombre)
 
     if not usuario:
-        raise UsuarioNoEncontradoException()
+        raise CampoIncorrectoException()
 
     if not usuario.comprobar_contraseña(contraseña):
-        raise ContraseñaIncorrectaException()
+        raise CampoIncorrectoException()
 
     return usuario
-
-
-def comprobar_usuario_es_admin(data: str) -> bool:
-    if not data or data["rol"] != "admin":
-        return False
-
-    return True
