@@ -1,12 +1,14 @@
 <script setup>
 import { carritoStore } from '@/stores/carritoStore'
 import { PlusIcon, MinusIcon, Trash2 } from 'lucide-vue-next'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { toast } from 'vue-sonner'
 
 const VaciarCarritoDialog = defineAsyncComponent(() => import('./VaciarCarritoDialog.vue'))
 
 const store = carritoStore()
+
+const vaciarAbierto = ref(false)
 
 function eliminarProducto(id) {
   store.eliminarProductoCarrito(id)
@@ -85,6 +87,7 @@ function vaciarCarrito() {
 
   <div class="mt-5 flex flex-col gap-2">
     <button class="btn btn-primary">Finalizar Compra</button>
-    <VaciarCarritoDialog @vaciar-carrito="vaciarCarrito" />
+    <button class="btn btn-error" @click="vaciarAbierto = true">Vaciar Carrito</button>
+    <VaciarCarritoDialog v-model:open="vaciarAbierto" @vaciar-carrito="vaciarCarrito" v-if="vaciarAbierto"/>
   </div>
 </template>
