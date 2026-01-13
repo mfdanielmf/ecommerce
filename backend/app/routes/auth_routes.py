@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, set_access_cookies, unset_jwt_cookies
 from app.repositories.user_repo import insert_user, find_user_id
 from app.services.auth_services import validar_usuario, comprobar_login
-from app.models.exceptions import ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
+from app.models.exceptions import CampoIncorrectoException, ContraseñasDiferentesException, CorreoYaUsadoException, LongitudContraseñaIncorrectaException, LongitudNombreIncorrectaException, NombreYaUsadoException, UsuarioNoEncontradoException, ContraseñaIncorrectaException
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -46,14 +46,8 @@ def register():
     if not data or not data.get("nombre") or not data.get("correo") or not data.get("contraseña") or not data.get("contraseña_repetir"):
         return jsonify({"error": "Faltan datos en la petición"}), 400
 
-    nombre: str = data["nombre"]
-    correo: str = data["correo"]
-    contraseña: str = data["contraseña"]
-    contraseña_repetir: str = data["contraseña_repetir"]
-
     try:
-        usuario = validar_usuario(
-            nombre, correo, contraseña, contraseña_repetir)
+        usuario = validar_usuario(data)
 
         usuario_insertado = insert_user(usuario)
 
@@ -62,16 +56,12 @@ def register():
             "usuario": usuario_insertado.to_dict()
         }), 200
 
-    except LongitudNombreIncorrectaException:
-        return jsonify({"error": "Longitud del nombre incorrecta"}), 422
+    except CampoIncorrectoException:
+        return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
     except NombreYaUsadoException:
         return jsonify({"error": "El nombre ya está en uso"}), 409
     except CorreoYaUsadoException:
         return jsonify({"error": "El correo ya está en uso"}), 409
-    except LongitudContraseñaIncorrectaException:
-        return jsonify({"error": "Longitud de la contraseña incorrecta"}), 422
-    except ContraseñasDiferentesException:
-        return jsonify({"error": "Las contraseñas no son iguales"}), 422
 
 
 @auth_bp.route("/me")
