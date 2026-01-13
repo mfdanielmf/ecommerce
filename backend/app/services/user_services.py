@@ -16,3 +16,10 @@ def buscar_usuario_id(id: int) -> Usuario | UsuarioNoExistenteException:
         raise UsuarioNoExistenteException()
 
     return usuario
+
+
+def comprobar_usuario_es_admin(data: str) -> bool:
+    if not data or data["rol"] != "admin":
+        return False
+
+    return True

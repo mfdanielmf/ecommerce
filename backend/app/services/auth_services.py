@@ -37,10 +37,3 @@ def comprobar_login(data) -> Usuario | CampoIncorrectoException:
         raise CampoIncorrectoException()
 
     return usuario
-
-
-def comprobar_usuario_es_admin(data: str) -> bool:
-    if not data or data["rol"] != "admin":
-        return False
-
-    return True

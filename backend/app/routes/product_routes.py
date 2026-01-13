@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt
 from app.models.exceptions import ErrorInternoException, ProductoNoEncontradoException, CampoIncorrectoException
 from app.models.producto import Producto
 from app.services.product_services import obtener_todos_los_productos, obtener_producto_id, insertar_producto_base, eliminar_producto_base, actualizar_datos_producto
-from app.services.auth_services import comprobar_usuario_es_admin
+from app.services.user_services import comprobar_usuario_es_admin
 
 producto_bp = Blueprint("productos", __name__)
 
