@@ -8,7 +8,6 @@ import {
   DialogPortal,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from 'radix-vue'
 
 defineEmits(['vaciarCarrito'])
@@ -16,9 +15,6 @@ defineEmits(['vaciarCarrito'])
 
 <template>
   <DialogRoot>
-    <DialogTrigger class="btn btn-error" as-child>
-      <button>Vaciar Carrito</button>
-    </DialogTrigger>
     <DialogPortal>
       <DialogOverlay class="bg-black/50 data-[state=open]:animate-overlayShow fixed inset-0 z-30" />
       <DialogContent
