@@ -1,9 +1,10 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import { useGetProductos } from '@/queries/useProductosQuery'
 import { useCategoriasStore } from '@/stores/categoriasStore'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
-import { defineAsyncComponent, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 
 const ProductoDialog = defineAsyncComponent(
   () => import('@/components/dashboard/productos/ProductoDialog.vue'),
@@ -26,11 +27,21 @@ const productoEliminar = ref(null)
 const eliminando = ref(false)
 const productoEditar = ref(null)
 
+const {data, isLoading, error} = useGetProductos()
+
+const productosConCategoria = computed(() => {
+  if (!data) return []
+
+  return data.value.map(producto => ({
+    ...producto,
+    categoria: categoriasStore.categorias[producto.id_categoria]
+  }))
+})
+
 onMounted(async () => {
-  productosStore.error = null
   categoriasStore.error = null
 
-  await Promise.all([productosStore.fetchProductos(), categoriasStore.fetchCategorias()])
+  await categoriasStore.fetchCategorias()
 
   cargandoDatos.value = false
 })
@@ -82,12 +93,12 @@ async function editarProducto(data) {
 </script>
 
 <template>
-  <div v-if="cargandoDatos" class="h-screen grid place-content-center">
+  <div v-if="isLoading" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
 
-  <ErrorMessage v-else-if="productosStore.error || categoriasStore.error">
-    {{ productosStore.error || categoriasStore.error }}
+  <ErrorMessage v-else-if="error || categoriasStore.error">
+    {{ error.response?.data?.error || "Ha ocurrido un error al cargar los datos" }}
   </ErrorMessage>
 
   <div v-else>
@@ -122,8 +133,8 @@ async function editarProducto(data) {
     </ProductoDialog>
 
     <ProductTable
-      :productos="productosStore.productosConCategoria"
-      v-if="Object.keys(productosStore.productos).length > 0"
+      :productos="productosConCategoria"
+      v-if="data"
       @abrir-confirmar-eliminar="abrirConfirmarEliminar"
       @abrir-editar-producto="abrirEditarProducto"
     />
