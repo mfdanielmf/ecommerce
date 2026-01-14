@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, jwt_required
 
 from app.models.exceptions import CampoIncorrectoException, CategoriaConProductosException, CategoriaYaExistenteException, CategoriaNoEncontradaException
-from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_categoria_base, actualizar_categoria
+from app.services.category_services import obtener_todas_categorias, insertar_categoria_base, eliminar_categoria_base, actualizar_categoria, obtener_categoria_por_id
 
 from app.models.categoria import Categoria
 from app.services.user_services import comprobar_usuario_es_admin
@@ -16,6 +16,17 @@ def get_categorias():
     categorias: list[Categoria] = obtener_todas_categorias()
 
     return jsonify({"categorias": [categoria.to_dict() for categoria in categorias]}), 200
+
+
+# GET CATEGORÍA POR ID
+@categoria_bp.route("/<int:id>")
+def get_categoria_id(id):
+    try:
+        categoria: Categoria = obtener_categoria_por_id(id)
+
+        return jsonify({"categoria": categoria.to_dict()}), 200
+    except CategoriaNoEncontradaException:
+        return jsonify({"error":  f"No se ha encontrado la categoría con ID {id}"}), 404
 
 
 # POST INSERTAR CATEGORÍA
