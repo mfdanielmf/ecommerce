@@ -10,9 +10,6 @@ class UsuarioNoExistenteException(Exception):
 
 
 # AUTH
-class ContraseñasDiferentesException(Exception):
-    pass
-
 
 class NombreYaUsadoException(Exception):
     pass

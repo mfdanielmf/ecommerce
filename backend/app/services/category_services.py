@@ -1,3 +1,4 @@
+from app.models.producto import Producto
 from app.repositories.category_repo import get_all_categories, get_category_by_name, insert_category, get_category_by_id, delete_category, update_category
 from app.models.categoria import Categoria
 from app.models.exceptions import CampoIncorrectoException, CategoriaNoEncontradaException, CategoriaYaExistenteException, CategoriaConProductosException
@@ -94,3 +95,9 @@ def actualizar_categoria(data, id: int) -> Categoria | CampoIncorrectoException 
         return categoria_actualizada
     except CategoriaNoEncontradaException:
         raise CategoriaNoEncontradaException()
+
+
+def obtener_todos_productos_categoria(id: int) -> list[Producto | None] | CategoriaNoEncontradaException:
+    categoria: Categoria = obtener_categoria_por_id(id)
+
+    return categoria.productos

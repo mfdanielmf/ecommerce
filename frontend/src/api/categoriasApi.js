@@ -4,6 +4,12 @@ export default {
   getCategorias() {
     return api().get('/api/categorias/')
   },
+  getCategoriaId(id) {
+    return api().get(`/api/categorias/${id}`)
+  },
+  getProductosCategoria(id) {
+    return api().get(`/api/categorias/${id}/productos`)
+  },
   insertarCategoria(data) {
     return api().post('/api/categorias/', data, { withCredentials: true })
   },
