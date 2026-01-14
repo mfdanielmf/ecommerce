@@ -5,3 +5,9 @@ export async function getProductos(){
 
   return req.data.products
 }
+
+export async function eliminarProductoId(id) {
+  const req = await api().delete(`/api/productos/${id}`, { withCredentials: true })
+
+  return req.data
+}

@@ -1,6 +1,6 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { useGetProductos } from '@/queries/useProductosQuery'
+import { useDeleteProducto, useGetProductos } from '@/queries/useProductosQuery'
 import { useCategoriasStore } from '@/stores/categoriasStore'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
@@ -24,15 +24,15 @@ const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
 const productoEliminar = ref(null)
-const eliminando = ref(false)
 const productoEditar = ref(null)
 
-const {data, isLoading, error} = useGetProductos()
+const {data: dataProductos, isLoading: loadingProductos, error: errorProductos} = useGetProductos()
+const {isPending: loadingEliminar, mutateAsync: mutateEliminar} = useDeleteProducto()
 
 const productosConCategoria = computed(() => {
-  if (!data) return []
+  if (!dataProductos) return []
 
-  return data.value.map(producto => ({
+  return dataProductos.value.map(producto => ({
     ...producto,
     categoria: categoriasStore.categorias[producto.id_categoria]
   }))
@@ -50,6 +50,7 @@ async function añadirProducto(data) {
   const success = await productosStore.insertarProducto(data)
 
   if (success) {
+
     añadirAbierto.value = false
   } else {
     añadirAbierto.value = true
@@ -66,11 +67,8 @@ function abrirConfirmarEliminar(producto) {
 async function eliminarProducto() {
   if (!productoEliminar.value) return
 
-  eliminando.value = true
+  await mutateEliminar(productoEliminar.value.id)
 
-  await productosStore.eliminarProductoId(productoEliminar.value.id)
-
-  eliminando.value = false
   eliminarAbierto.value = false
 }
 
@@ -93,11 +91,11 @@ async function editarProducto(data) {
 </script>
 
 <template>
-  <div v-if="isLoading" class="h-screen grid place-content-center">
+  <div v-if="loadingProductos" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
 
-  <ErrorMessage v-else-if="error || categoriasStore.error">
+  <ErrorMessage v-else-if="errorProductos || categoriasStore.error">
     {{ error.response?.data?.error || "Ha ocurrido un error al cargar los datos" }}
   </ErrorMessage>
 
@@ -134,7 +132,7 @@ async function editarProducto(data) {
 
     <ProductTable
       :productos="productosConCategoria"
-      v-if="data"
+      v-if="dataProductos"
       @abrir-confirmar-eliminar="abrirConfirmarEliminar"
       @abrir-editar-producto="abrirEditarProducto"
     />
@@ -143,7 +141,7 @@ async function editarProducto(data) {
       v-model:open="eliminarAbierto"
       v-if="eliminarAbierto"
       @confirmar-eliminar="eliminarProducto"
-      :eliminando="eliminando"
+      :eliminando="loadingEliminar"
     >
       ¿Seguro que quieres eliminar el producto {{ productoEliminar.nombre }}?
     </ConfirmDialog>
