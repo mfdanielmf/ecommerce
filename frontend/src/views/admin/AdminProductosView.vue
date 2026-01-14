@@ -1,6 +1,6 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { useDeleteProducto, useGetProductos } from '@/queries/useProductosQuery'
+import { useDeleteProducto, useGetProductos, useInsertarProducto } from '@/queries/useProductosQuery'
 import { useCategoriasStore } from '@/stores/categoriasStore'
 import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
@@ -18,8 +18,6 @@ const ConfirmDialog = defineAsyncComponent(() => import('@/components/dashboard/
 const productosStore = productStore()
 const categoriasStore = useCategoriasStore()
 
-const cargandoDatos = ref(true)
-
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
@@ -28,6 +26,7 @@ const productoEditar = ref(null)
 
 const {data: dataProductos, isLoading: loadingProductos, error: errorProductos} = useGetProductos()
 const {isPending: loadingEliminar, mutateAsync: mutateEliminar} = useDeleteProducto()
+const { isSuccess: successAñadir, mutateAsync: mutateAñadir} = useInsertarProducto()
 
 const productosConCategoria = computed(() => {
   if (!dataProductos) return []
@@ -42,18 +41,15 @@ onMounted(async () => {
   categoriasStore.error = null
 
   await categoriasStore.fetchCategorias()
-
-  cargandoDatos.value = false
 })
 
 async function añadirProducto(data) {
-  const success = await productosStore.insertarProducto(data)
+  if (!data) return
 
-  if (success) {
+  await mutateAñadir(data)
 
+  if (successAñadir){
     añadirAbierto.value = false
-  } else {
-    añadirAbierto.value = true
   }
 }
 
