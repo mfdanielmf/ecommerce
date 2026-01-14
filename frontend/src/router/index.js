@@ -16,6 +16,7 @@ const AdminProductosView = () => import('@/views/admin/AdminProductosView.vue')
 const AdminCategoriasView = () => import('@/views/admin/AdminCategoriasView.vue')
 const AdminPedidosView = () => import('@/views/admin/AdminPedidosView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
+const CategoriesView = () => import('@/views/CategoriesView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,11 @@ const router = createRouter({
               },
             },
           ],
+        },
+        {
+          path: '/categorias',
+          name: 'lista_categorias',
+          component: CategoriesView,
         },
         {
           path: '/forbidden',
