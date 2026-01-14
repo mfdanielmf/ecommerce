@@ -26,6 +26,25 @@ export const useCategoriasStore = defineStore('categorias', () => {
     }
   }
 
+  function getCategoriaPorId(id) {
+    return categorias.value[id]
+  }
+
+  async function fetchCategoriaId(id) {
+    if (getCategoriaPorId(id)) return
+
+    cargando.value = true
+    try {
+      const req = await categoriasApi.getCategoriaId(id)
+
+      categorias.value[req.data.categoria.id] = req.data.categoria
+    } catch (e) {
+      error.value = e.response?.data?.error || `Error al obtener la categoría con ID ${id}`
+    } finally {
+      cargando.value = false
+    }
+  }
+
   async function insertarCategoria(data) {
     try {
       const req = await categoriasApi.insertarCategoria(data)
@@ -75,6 +94,8 @@ export const useCategoriasStore = defineStore('categorias', () => {
     cargando,
     error,
     fetchCategorias,
+    fetchCategoriaId,
+    getCategoriaPorId,
     insertarCategoria,
     eliminarCategoria,
     editarCategoria,
