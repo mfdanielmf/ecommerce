@@ -1,9 +1,14 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import {
+  useDeleteProducto,
+  useEditarProducto,
+  useGetProductos,
+  useInsertarProducto,
+} from '@/queries/useProductosQuery'
 import { useCategoriasStore } from '@/stores/categoriasStore'
-import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
-import { defineAsyncComponent, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 
 const ProductoDialog = defineAsyncComponent(
   () => import('@/components/dashboard/productos/ProductoDialog.vue'),
@@ -14,34 +19,46 @@ const ProductTable = defineAsyncComponent(
 const ErrorMessage = defineAsyncComponent(() => import('@/components/common/ErrorMessage.vue'))
 const ConfirmDialog = defineAsyncComponent(() => import('@/components/dashboard/ConfirmDialog.vue'))
 
-const productosStore = productStore()
+// ---------------------- FALTA PASAR CATEGORIAS A TANSTACK Y DESPUÉS YA PUEDO REFACTORIZAR LA LÓGICA DE CARGA ERRORES... -------------------
 const categoriasStore = useCategoriasStore()
-
-const cargandoDatos = ref(true)
 
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
 const productoEliminar = ref(null)
-const eliminando = ref(false)
 const productoEditar = ref(null)
 
+const {
+  data: dataProductos,
+  isLoading: loadingProductos,
+  error: errorProductos,
+} = useGetProductos()
+const { isPending: loadingEliminar, mutateAsync: mutateEliminar } = useDeleteProducto()
+const { isSuccess: successAñadir, mutateAsync: mutateAñadir } = useInsertarProducto()
+const { isSuccess: successEditar, mutateAsync: mutateEditar } = useEditarProducto()
+
+const productosConCategoria = computed(() => {
+  if (!dataProductos) return []
+
+  return dataProductos.value.map((producto) => ({
+    ...producto,
+    categoria: categoriasStore.categorias[producto.id_categoria],
+  }))
+})
+
 onMounted(async () => {
-  productosStore.error = null
   categoriasStore.error = null
 
-  await Promise.all([productosStore.fetchProductos(), categoriasStore.fetchCategorias()])
-
-  cargandoDatos.value = false
+  await categoriasStore.fetchCategorias()
 })
 
 async function añadirProducto(data) {
-  const success = await productosStore.insertarProducto(data)
+  if (!data) return
 
-  if (success) {
+  await mutateAñadir(data)
+
+  if (successAñadir.value) {
     añadirAbierto.value = false
-  } else {
-    añadirAbierto.value = true
   }
 }
 
@@ -55,11 +72,8 @@ function abrirConfirmarEliminar(producto) {
 async function eliminarProducto() {
   if (!productoEliminar.value) return
 
-  eliminando.value = true
+  await mutateEliminar(productoEliminar.value.id)
 
-  await productosStore.eliminarProductoId(productoEliminar.value.id)
-
-  eliminando.value = false
   eliminarAbierto.value = false
 }
 
@@ -71,23 +85,23 @@ function abrirEditarProducto(producto) {
 }
 
 async function editarProducto(data) {
-  const success = await productosStore.editarProducto(productoEditar.value.id, data)
+  if (!productoEditar.value) return
 
-  if (success) {
+  await mutateEditar({ id: productoEditar.value.id, data })
+
+  if (successEditar.value) {
     editarAbierto.value = false
-  } else {
-    editarAbierto.value = true
   }
 }
 </script>
 
 <template>
-  <div v-if="cargandoDatos" class="h-screen grid place-content-center">
+  <div v-if="loadingProductos" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
 
-  <ErrorMessage v-else-if="productosStore.error || categoriasStore.error">
-    {{ productosStore.error || categoriasStore.error }}
+  <ErrorMessage v-else-if="errorProductos || categoriasStore.error">
+    {{ error.response?.data?.error || 'Ha ocurrido un error al cargar los datos' }}
   </ErrorMessage>
 
   <div v-else>
@@ -122,8 +136,8 @@ async function editarProducto(data) {
     </ProductoDialog>
 
     <ProductTable
-      :productos="productosStore.productosConCategoria"
-      v-if="Object.keys(productosStore.productos).length > 0"
+      :productos="productosConCategoria"
+      v-if="dataProductos"
       @abrir-confirmar-eliminar="abrirConfirmarEliminar"
       @abrir-editar-producto="abrirEditarProducto"
     />
@@ -132,7 +146,7 @@ async function editarProducto(data) {
       v-model:open="eliminarAbierto"
       v-if="eliminarAbierto"
       @confirmar-eliminar="eliminarProducto"
-      :eliminando="eliminando"
+      :eliminando="loadingEliminar"
     >
       ¿Seguro que quieres eliminar el producto {{ productoEliminar.nombre }}?
     </ConfirmDialog>
