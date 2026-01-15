@@ -16,9 +16,11 @@ export function useGetProductos() {
 }
 
 export function useGetProductoId(id) {
+  const idProducto = Number(id)
+
   return useQuery({
-    queryKey: ['producto', id],
-    queryFn: () => getProductoId(id),
+    queryKey: ['producto', idProducto],
+    queryFn: () => getProductoId(idProducto),
     enabled: !!id,
   })
 }
@@ -58,8 +60,9 @@ export function useEditarProducto() {
 
   return useMutation({
     mutationFn: ({ id, data }) => editarProducto(id, data),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['productos'] })
+      queryClient.invalidateQueries({ queryKey: ['producto', Number(variables.id)] })
       toast.success(data.msg || 'Se ha editado correctamente el producto')
     },
     onError: (e) => {
