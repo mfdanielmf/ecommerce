@@ -3,6 +3,7 @@ import { useCategoriasStore } from '@/stores/categoriasStore'
 import { defineAsyncComponent, onMounted, ref } from 'vue'
 import { PlusIcon } from 'lucide-vue-next'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import { useGetCategorias, useInsertarCategoria} from '@/queries/useCategoriasQuery'
 
 const CategoriaDialog = defineAsyncComponent(
   () => import('@/components/dashboard/categorias/CategoriaDialog.vue'),
@@ -27,10 +28,13 @@ const categoriaEliminar = ref(null)
 const eliminando = ref(false)
 const categoriaEditar = ref(null)
 
-async function añadirCategoria(data) {
-  const success = await categoriasStore.insertarCategoria(data)
+const {data: categorias, isLoading, error} = useGetCategorias()
+const {isSuccess: successInsertar, mutateAsync: mutateInsertar} = useInsertarCategoria()
 
-  if (success) {
+async function añadirCategoria(data) {
+  await mutateInsertar(data)
+
+  if (successInsertar) {
     añadirAbierto.value = false
   } else {
     añadirAbierto.value = true
@@ -71,12 +75,12 @@ async function editarCategoria(data) {
 </script>
 
 <template>
-  <div v-if="categoriasStore.cargando" class="h-screen grid place-content-center">
+  <div v-if="isLoading" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
 
-  <ErrorMessage v-else-if="categoriasStore.error">
-    {{ categoriasStore.error }}
+  <ErrorMessage v-else-if="error">
+    {{ error.response?.data?.error || "Error al cargar la lista de categorías" }}
   </ErrorMessage>
 
   <div v-else>
@@ -88,8 +92,8 @@ async function editarCategoria(data) {
     </span>
 
     <CategoryTable
-      v-if="Object.keys(categoriasStore.categorias).length > 0"
-      :categorias="categoriasStore.categorias"
+      v-if="categorias"
+      :categorias="categorias"
       @abrir-confirmar-eliminar="abrirConfirmarEliminar"
       @abrir-editar-categoria="abrirEditarCategoria"
     />

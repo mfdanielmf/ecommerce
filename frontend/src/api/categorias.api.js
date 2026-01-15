@@ -5,3 +5,9 @@ export async function getCategorias() {
 
   return req.data.categorias
 }
+
+export async function insertarCategoria(data) {
+  const req = await api().post('/api/categorias/', data, { withCredentials: true })
+
+  return req.data
+}

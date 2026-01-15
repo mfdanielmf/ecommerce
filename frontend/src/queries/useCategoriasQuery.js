@@ -1,9 +1,25 @@
-import { getCategorias } from "@/api/categorias.api";
-import { useQuery } from "@tanstack/vue-query";
+import { getCategorias, insertarCategoria } from "@/api/categorias.api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { toast } from "vue-sonner";
 
 export function useGetCategorias() {
   return useQuery({
     queryKey: ["categorias"],
     queryFn: () => getCategorias()
+  })
+}
+
+export function useInsertarCategoria() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data) => insertarCategoria(data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["categorias"] })
+      toast.success(data.msg || "Se ha insertado la categoría correctamente")
+    },
+    onError: (e) => {
+      toast.error(e.response?.data?.error || "Ha ocurrido un error al insertar la categoría")
+    }
   })
 }
