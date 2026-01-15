@@ -3,6 +3,7 @@ import {
   añadirProducto,
   editarProducto,
   eliminarProductoId,
+  getProductoId,
   getProductos,
 } from '@/api/productos.api'
 import { toast } from 'vue-sonner'
@@ -11,6 +12,14 @@ export function useGetProductos() {
   return useQuery({
     queryKey: ['productos'],
     queryFn: () => getProductos(),
+  })
+}
+
+export function useGetProductoId(id) {
+  return useQuery({
+    queryKey: ['producto', id],
+    queryFn: () => getProductoId(id),
+    enabled: !!id,
   })
 }
 

@@ -6,6 +6,12 @@ export async function getProductos() {
   return req.data.products
 }
 
+export async function getProductoId(id) {
+  const req = await api().get(`/api/productos/${id}`)
+
+  return req.data
+}
+
 export async function añadirProducto(data) {
   const req = await api().post('/api/productos/', data, { withCredentials: true })
 
