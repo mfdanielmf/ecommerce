@@ -1,4 +1,4 @@
-import api from "./api"
+import api from './api'
 
 export async function getProductos() {
   const req = await api().get('/api/productos/')
@@ -8,6 +8,12 @@ export async function getProductos() {
 
 export async function añadirProducto(data) {
   const req = await api().post('/api/productos/', data, { withCredentials: true })
+
+  return req.data
+}
+
+export async function editarProducto(id, data) {
+  const req = await api().put(`/api/productos/${id}`, data, { withCredentials: true })
 
   return req.data
 }

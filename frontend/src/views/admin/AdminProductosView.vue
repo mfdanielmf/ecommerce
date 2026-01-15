@@ -1,8 +1,12 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { useDeleteProducto, useGetProductos, useInsertarProducto } from '@/queries/useProductosQuery'
+import {
+  useDeleteProducto,
+  useEditarProducto,
+  useGetProductos,
+  useInsertarProducto,
+} from '@/queries/useProductosQuery'
 import { useCategoriasStore } from '@/stores/categoriasStore'
-import { productStore } from '@/stores/productosStore'
 import { PlusIcon } from 'lucide-vue-next'
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 
@@ -15,7 +19,7 @@ const ProductTable = defineAsyncComponent(
 const ErrorMessage = defineAsyncComponent(() => import('@/components/common/ErrorMessage.vue'))
 const ConfirmDialog = defineAsyncComponent(() => import('@/components/dashboard/ConfirmDialog.vue'))
 
-const productosStore = productStore()
+// ---------------------- FALTA PASAR CATEGORIAS A TANSTACK Y DESPUÉS YA PUEDO REFACTORIZAR LA LÓGICA DE CARGA ERRORES... -------------------
 const categoriasStore = useCategoriasStore()
 
 const añadirAbierto = ref(false)
@@ -24,16 +28,21 @@ const editarAbierto = ref(false)
 const productoEliminar = ref(null)
 const productoEditar = ref(null)
 
-const {data: dataProductos, isLoading: loadingProductos, error: errorProductos} = useGetProductos()
-const {isPending: loadingEliminar, mutateAsync: mutateEliminar} = useDeleteProducto()
-const { isSuccess: successAñadir, mutateAsync: mutateAñadir} = useInsertarProducto()
+const {
+  data: dataProductos,
+  isLoading: loadingProductos,
+  error: errorProductos,
+} = useGetProductos()
+const { isPending: loadingEliminar, mutateAsync: mutateEliminar } = useDeleteProducto()
+const { isSuccess: successAñadir, mutateAsync: mutateAñadir } = useInsertarProducto()
+const { isSuccess: successEditar, mutateAsync: mutateEditar } = useEditarProducto()
 
 const productosConCategoria = computed(() => {
   if (!dataProductos) return []
 
-  return dataProductos.value.map(producto => ({
+  return dataProductos.value.map((producto) => ({
     ...producto,
-    categoria: categoriasStore.categorias[producto.id_categoria]
+    categoria: categoriasStore.categorias[producto.id_categoria],
   }))
 })
 
@@ -48,7 +57,7 @@ async function añadirProducto(data) {
 
   await mutateAñadir(data)
 
-  if (successAñadir){
+  if (successAñadir.value) {
     añadirAbierto.value = false
   }
 }
@@ -76,12 +85,12 @@ function abrirEditarProducto(producto) {
 }
 
 async function editarProducto(data) {
-  const success = await productosStore.editarProducto(productoEditar.value.id, data)
+  if (!productoEditar.value) return
 
-  if (success) {
+  await mutateEditar({ id: productoEditar.value.id, data })
+
+  if (successEditar.value) {
     editarAbierto.value = false
-  } else {
-    editarAbierto.value = true
   }
 }
 </script>
@@ -92,7 +101,7 @@ async function editarProducto(data) {
   </div>
 
   <ErrorMessage v-else-if="errorProductos || categoriasStore.error">
-    {{ error.response?.data?.error || "Ha ocurrido un error al cargar los datos" }}
+    {{ error.response?.data?.error || 'Ha ocurrido un error al cargar los datos' }}
   </ErrorMessage>
 
   <div v-else>
