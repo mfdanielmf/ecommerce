@@ -2,7 +2,6 @@
 import { configure, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import ProductoField from '../FormField.vue'
-import { useCategoriasStore } from '@/stores/categoriasStore'
 
 const props = defineProps({
   funcion: {
@@ -12,6 +11,9 @@ const props = defineProps({
   producto: {
     type: Object,
   },
+  categorias:{
+    required: true
+  }
 })
 
 configure({
@@ -62,8 +64,6 @@ const onSubmit = handleSubmit(async (data) => {
 })
 
 defineExpose({ onSubmit, isSubmitting })
-
-const categoriasStore = useCategoriasStore()
 </script>
 
 <template>
@@ -84,7 +84,7 @@ const categoriasStore = useCategoriasStore()
       >
         <option value="" disabled selected>Selecciona una categoría</option>
         <option
-          v-for="categoria in categoriasStore.categorias"
+          v-for="categoria in props.categorias"
           :key="categoria.id"
           :value="categoria.nombre"
         >
