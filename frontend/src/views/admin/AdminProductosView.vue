@@ -25,16 +25,24 @@ const editarAbierto = ref(false)
 const productoEliminar = ref(null)
 const productoEditar = ref(null)
 
-const { data: dataProductos, isLoading: loadingProductos,error: errorProductos } = useGetProductos()
-const { data: dataCategorias, isLoading: loadingCategorias, error: errorCategorias } = useGetCategorias()
+const {
+  data: dataProductos,
+  isLoading: loadingProductos,
+  error: errorProductos,
+} = useGetProductos()
+const {
+  data: dataCategorias,
+  isLoading: loadingCategorias,
+  error: errorCategorias,
+} = useGetCategorias()
 const { isPending: loadingEliminar, mutateAsync: mutateEliminar } = useDeleteProducto()
 const { isSuccess: successAñadir, mutateAsync: mutateAñadir } = useInsertarProducto()
 const { isSuccess: successEditar, mutateAsync: mutateEditar } = useEditarProducto()
 
 const cargando = computed(() => {
-  if (loadingCategorias.value || loadingProductos.value){
+  if (loadingCategorias.value || loadingProductos.value) {
     return true
-  }else{
+  } else {
     return false
   }
 })
@@ -42,16 +50,20 @@ const cargando = computed(() => {
 const productosConCategoria = computed(() => {
   if (!dataProductos.value || !dataCategorias.value) return []
 
-   return dataProductos.value.map((producto) => ({
+  return dataProductos.value.map((producto) => ({
     ...producto,
-    categoria: dataCategorias.value.find((categoria) => categoria.id === producto.id_categoria)
+    categoria: dataCategorias.value.find((categoria) => categoria.id === producto.id_categoria),
   }))
 })
 
 async function añadirProducto(datos) {
   if (!datos) return
 
-  await mutateAñadir(datos)
+  try {
+    await mutateAñadir(datos)
+  } catch (e) {
+    console.error(e.message)
+  }
 
   if (successAñadir.value) {
     añadirAbierto.value = false
@@ -68,7 +80,11 @@ function abrirConfirmarEliminar(producto) {
 async function eliminarProducto() {
   if (!productoEliminar.value) return
 
-  await mutateEliminar(productoEliminar.value.id)
+  try {
+    await mutateEliminar(productoEliminar.value.id)
+  } catch (e) {
+    console.error(e.message)
+  }
 
   eliminarAbierto.value = false
 }
@@ -84,7 +100,11 @@ function abrirEditarProducto(producto) {
 async function editarProducto(data) {
   if (!productoEditar.value) return
 
-  await mutateEditar({ id: productoEditar.value.id, data })
+  try {
+    await mutateEditar({ id: productoEditar.value.id, data })
+  } catch (e) {
+    console.error(e.message)
+  }
 
   if (successEditar.value) {
     editarAbierto.value = false
@@ -98,8 +118,11 @@ async function editarProducto(data) {
   </div>
 
   <ErrorMessage v-else-if="errorProductos || errorCategorias">
-    {{ errorProductos.response?.data?.error || errorCategorias.response?.data?.error
-     || 'Ha ocurrido un error al cargar los datos' }}
+    {{
+      errorProductos.response?.data?.error ||
+      errorCategorias.response?.data?.error ||
+      'Ha ocurrido un error al cargar los datos'
+    }}
   </ErrorMessage>
 
   <div v-else>

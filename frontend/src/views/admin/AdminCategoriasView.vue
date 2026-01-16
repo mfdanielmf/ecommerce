@@ -1,9 +1,13 @@
 <script setup>
 import { useCategoriasStore } from '@/stores/categoriasStore'
-import { defineAsyncComponent, onMounted, ref } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { PlusIcon } from 'lucide-vue-next'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { useGetCategorias, useInsertarCategoria} from '@/queries/useCategoriasQuery'
+import {
+  useDeleteCategoria,
+  useGetCategorias,
+  useInsertarCategoria,
+} from '@/queries/useCategoriasQuery'
 
 const CategoriaDialog = defineAsyncComponent(
   () => import('@/components/dashboard/categorias/CategoriaDialog.vue'),
@@ -16,23 +20,22 @@ const CategoryTable = defineAsyncComponent(
 
 const categoriasStore = useCategoriasStore()
 
-onMounted(() => {
-  categoriasStore.error = null
-  categoriasStore.fetchCategorias()
-})
-
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
 const categoriaEliminar = ref(null)
-const eliminando = ref(false)
 const categoriaEditar = ref(null)
 
-const {data: categorias, isLoading, error} = useGetCategorias()
-const {isSuccess: successInsertar, mutateAsync: mutateInsertar} = useInsertarCategoria()
+const { data: categorias, isLoading, error } = useGetCategorias()
+const { isSuccess: successInsertar, mutateAsync: mutateInsertar } = useInsertarCategoria()
+const { mutateAsync: mutateEliminar, isPending: pendingEliminar } = useDeleteCategoria()
 
 async function añadirCategoria(data) {
-  await mutateInsertar(data)
+  try {
+    await mutateInsertar(data)
+  } catch (e) {
+    console.error(e.message)
+  }
 
   if (successInsertar) {
     añadirAbierto.value = false
@@ -51,11 +54,12 @@ function abrirConfirmarEliminar(categoria) {
 async function eliminarCategoria() {
   if (!categoriaEliminar.value) return
 
-  eliminando.value = true
+  try {
+    await mutateEliminar(categoriaEliminar.value.id)
+  } catch (e) {
+    console.error(e.message)
+  }
 
-  await categoriasStore.eliminarCategoria(categoriaEliminar.value.id)
-
-  eliminando.value = false
   eliminarAbierto.value = false
 }
 
@@ -80,7 +84,7 @@ async function editarCategoria(data) {
   </div>
 
   <ErrorMessage v-else-if="error">
-    {{ error.response?.data?.error || "Error al cargar la lista de categorías" }}
+    {{ error.response?.data?.error || 'Error al cargar la lista de categorías' }}
   </ErrorMessage>
 
   <div v-else>
@@ -123,7 +127,7 @@ async function editarCategoria(data) {
       v-model:open="eliminarAbierto"
       v-if="eliminarAbierto"
       @confirmar-eliminar="eliminarCategoria"
-      :eliminando="eliminando"
+      :eliminando="pendingEliminar"
     >
       ¿Seguro que quieres eliminar la categoría {{ categoriaEliminar.nombre }}?
     </ConfirmDialog>
