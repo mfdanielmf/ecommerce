@@ -1,7 +1,7 @@
 <script setup>
 import { LogInIcon } from 'lucide-vue-next'
 import CarritoDrawerComponent from './carrito/CarritoDrawerComponent.vue'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/auth.store'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { defineAsyncComponent } from 'vue'
 

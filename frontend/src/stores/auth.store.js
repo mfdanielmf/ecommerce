@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import authApi from '@/api/authApi'
+import authApi from '@/api/auth.api'
 import { toast } from 'vue-sonner'
 
 export const useAuthStore = defineStore('auth', () => {

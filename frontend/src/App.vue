@@ -3,7 +3,7 @@ import { RouterView } from 'vue-router'
 import { Toaster } from 'vue-sonner'
 import 'vue-sonner/style.css'
 import { onMounted } from 'vue'
-import { useAuthStore } from './stores/authStore'
+import { useAuthStore } from './stores/auth.store'
 
 const authStore = useAuthStore()
 

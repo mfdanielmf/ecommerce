@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from 'radix-vue'
 import { LayoutDashboardIcon, LogOutIcon } from 'lucide-vue-next'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/auth.store'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({

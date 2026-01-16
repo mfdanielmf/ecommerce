@@ -1,6 +1,6 @@
 <script setup>
 import { ShoppingCartIcon, XIcon } from 'lucide-vue-next'
-import { carritoStore } from '@/stores/carritoStore'
+import { carritoStore } from '@/stores/carrito.store'
 import { defineAsyncComponent, ref } from 'vue'
 
 const CarritoVacioContent = defineAsyncComponent(() => import('./CarritoVacioContent.vue'))
