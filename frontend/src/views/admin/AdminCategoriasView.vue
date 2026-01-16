@@ -1,10 +1,10 @@
 <script setup>
-import { useCategoriasStore } from '@/stores/categoriasStore'
 import { defineAsyncComponent, ref } from 'vue'
 import { PlusIcon } from 'lucide-vue-next'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import {
   useDeleteCategoria,
+  useEditarCategoria,
   useGetCategorias,
   useInsertarCategoria,
 } from '@/queries/useCategoriasQuery'
@@ -18,8 +18,6 @@ const CategoryTable = defineAsyncComponent(
   () => import('@/components/dashboard/categorias/CategoryTable.vue'),
 )
 
-const categoriasStore = useCategoriasStore()
-
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
 const editarAbierto = ref(false)
@@ -29,6 +27,7 @@ const categoriaEditar = ref(null)
 const { data: categorias, isLoading, error } = useGetCategorias()
 const { isSuccess: successInsertar, mutateAsync: mutateInsertar } = useInsertarCategoria()
 const { mutateAsync: mutateEliminar, isPending: pendingEliminar } = useDeleteCategoria()
+const { isSuccess: successEditar, mutateAsync: mutateEditar } = useEditarCategoria()
 
 async function añadirCategoria(data) {
   try {
@@ -37,10 +36,8 @@ async function añadirCategoria(data) {
     console.error(e.message)
   }
 
-  if (successInsertar) {
+  if (successInsertar.value) {
     añadirAbierto.value = false
-  } else {
-    añadirAbierto.value = true
   }
 }
 
@@ -71,10 +68,15 @@ function abrirEditarCategoria(categoria) {
 }
 
 async function editarCategoria(data) {
-  const success = await categoriasStore.editarCategoria(categoriaEditar.value.id, data)
+  if (!data) return
 
-  if (success) editarAbierto.value = false
-  else editarAbierto.value = true
+  try {
+    await mutateEditar({ id: categoriaEditar.value.id, data })
+  } catch (e) {
+    console.error(e.message)
+  }
+
+  if (successEditar.value) editarAbierto.value = false
 }
 </script>
 

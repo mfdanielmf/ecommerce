@@ -17,3 +17,9 @@ export async function eliminarCategoria(id) {
 
   return req.data
 }
+
+export async function editarCategoria(id, data) {
+  const req = await api().put(`/api/categorias/${id}`, data, { withCredentials: true })
+
+  return req.data
+}

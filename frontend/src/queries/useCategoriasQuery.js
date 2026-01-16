@@ -1,4 +1,9 @@
-import { eliminarCategoria, getCategorias, insertarCategoria } from '@/api/categorias.api'
+import {
+  editarCategoria,
+  eliminarCategoria,
+  getCategorias,
+  insertarCategoria,
+} from '@/api/categorias.api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
@@ -35,6 +40,21 @@ export function useDeleteCategoria() {
     },
     onError: (e) => {
       toast.error(e.response?.data?.error || 'Ha ocurrido un error al eliminar la categoría')
+    },
+  })
+}
+
+export function useEditarCategoria() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, data }) => editarCategoria(id, data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['categorias'] })
+      toast.success(data.msg || 'Se ha editado correctamente la categoría')
+    },
+    onError: (e) => {
+      toast.error(e.response?.data?.error || 'Ha ocurrido un error al editar la categoría')
     },
   })
 }
