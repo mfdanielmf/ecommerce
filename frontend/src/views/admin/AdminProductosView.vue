@@ -101,7 +101,7 @@ async function editarProducto(data) {
   if (!productoEditar.value) return
 
   try {
-    await mutateEditar({ id: productoEditar.value.id, data })
+    await mutateEditar({ id: productoEditar.value.id, data, id_categoria: productoEditar.value.id_categoria})
   } catch (e) {
     console.error(e.message)
   }

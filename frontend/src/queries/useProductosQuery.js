@@ -47,7 +47,6 @@ export function useDeleteProducto() {
   return useMutation({
     mutationFn: (id) => eliminarProductoId(id),
     onSuccess: (data) => {
-      console.log(data.producto.id_categoria);
       queryClient.invalidateQueries({ queryKey: ['productos'] })
       queryClient.invalidateQueries({ queryKey: ["categoria", Number(data.producto.id_categoria)] })
       toast.success(data.msg || 'Se ha eliminado el producto correctamente')
@@ -66,6 +65,8 @@ export function useEditarProducto() {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['productos'] })
       queryClient.invalidateQueries({ queryKey: ['producto', Number(variables.id)] })
+      queryClient.invalidateQueries({ queryKey: ["categoria", Number(data.producto.id_categoria)] }) // Invalidamos la nueva categoría
+      queryClient.invalidateQueries({ queryKey: ["categoria", Number(variables.id_categoria)] }) // Invalidamos la categoría antigua
       toast.success(data.msg || 'Se ha editado correctamente el producto')
     },
     onError: (e) => {
