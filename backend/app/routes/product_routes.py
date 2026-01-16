@@ -65,9 +65,12 @@ def delete_producto(id):
         return jsonify({"error": "Acción cancelada. El usuario no es admin"}), 403
 
     try:
-        eliminar_producto_base(id)
+        producto_eliminado: Producto = eliminar_producto_base(id)
 
-        return jsonify({"msg": "Producto eliminado correctamente"}), 200
+        return jsonify({
+            "msg": "Producto eliminado correctamente",
+            "producto": producto_eliminado
+        }), 200
 
     except ProductoNoEncontradoException:
         return jsonify({"error": f"No se ha encontrado el producto con id {id}"}), 404

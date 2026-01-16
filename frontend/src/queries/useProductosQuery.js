@@ -32,6 +32,7 @@ export function useInsertarProducto() {
     mutationFn: (data) => añadirProducto(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['productos'] })
+      queryClient.invalidateQueries({ queryKey: ["categoria", Number(data.producto.id_categoria)] })
       toast.success(data.msg || 'Se ha insertado el producto correctamente')
     },
     onError: (e) => {
@@ -46,7 +47,9 @@ export function useDeleteProducto() {
   return useMutation({
     mutationFn: (id) => eliminarProductoId(id),
     onSuccess: (data) => {
+      console.log(data.producto.id_categoria);
       queryClient.invalidateQueries({ queryKey: ['productos'] })
+      queryClient.invalidateQueries({ queryKey: ["categoria", Number(data.producto.id_categoria)] })
       toast.success(data.msg || 'Se ha eliminado el producto correctamente')
     },
     onError: (e) => {

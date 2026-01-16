@@ -46,11 +46,15 @@ def insertar_producto_base(data) -> Producto | CampoIncorrectoException | ErrorI
         raise CategoriaNoEncontradaException()
 
 
-def eliminar_producto_base(id: int) -> None | ProductoNoEncontradoException:
+def eliminar_producto_base(id: int) -> Producto | ProductoNoEncontradoException:
     try:
         producto = obtener_producto_id(id)
 
+        copia_producto = producto.to_dict()
+
         delete_product(producto)
+
+        return copia_producto  # Producto ya pasado a dict
     except ProductoNoEncontradoException:
         raise ProductoNoEncontradoException()
 
