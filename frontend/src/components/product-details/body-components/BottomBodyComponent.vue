@@ -1,6 +1,6 @@
 <script setup>
 import { ShoppingCartIcon } from 'lucide-vue-next'
-import { carritoStore } from '@/stores/carritoStore'
+import { carritoStore } from '@/stores/carrito.store'
 import QuantitySelectorComponent from './QuantitySelectorComponent.vue'
 import { computed, ref } from 'vue'
 import { toast } from 'vue-sonner'

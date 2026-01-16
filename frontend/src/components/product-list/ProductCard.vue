@@ -1,5 +1,5 @@
 <script setup>
-import { carritoStore } from '@/stores/carritoStore'
+import { carritoStore } from '@/stores/carrito.store'
 import { computed } from 'vue'
 import { toast } from 'vue-sonner'
 

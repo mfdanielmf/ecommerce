@@ -1,14 +1,14 @@
 <script setup>
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import { useGetCategorias } from '@/queries/useCategoriasQuery'
 import {
   useDeleteProducto,
   useEditarProducto,
   useGetProductos,
   useInsertarProducto,
 } from '@/queries/useProductosQuery'
-import { useCategoriasStore } from '@/stores/categoriasStore'
 import { PlusIcon } from 'lucide-vue-next'
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 
 const ProductoDialog = defineAsyncComponent(
   () => import('@/components/dashboard/productos/ProductoDialog.vue'),
@@ -18,9 +18,6 @@ const ProductTable = defineAsyncComponent(
 )
 const ErrorMessage = defineAsyncComponent(() => import('@/components/common/ErrorMessage.vue'))
 const ConfirmDialog = defineAsyncComponent(() => import('@/components/dashboard/ConfirmDialog.vue'))
-
-// ---------------------- FALTA PASAR CATEGORIAS A TANSTACK Y DESPUÉS YA PUEDO REFACTORIZAR LA LÓGICA DE CARGA ERRORES... -------------------
-const categoriasStore = useCategoriasStore()
 
 const añadirAbierto = ref(false)
 const eliminarAbierto = ref(false)
@@ -33,29 +30,40 @@ const {
   isLoading: loadingProductos,
   error: errorProductos,
 } = useGetProductos()
+const {
+  data: dataCategorias,
+  isLoading: loadingCategorias,
+  error: errorCategorias,
+} = useGetCategorias()
 const { isPending: loadingEliminar, mutateAsync: mutateEliminar } = useDeleteProducto()
 const { isSuccess: successAñadir, mutateAsync: mutateAñadir } = useInsertarProducto()
 const { isSuccess: successEditar, mutateAsync: mutateEditar } = useEditarProducto()
 
+const cargando = computed(() => {
+  if (loadingCategorias.value || loadingProductos.value) {
+    return true
+  } else {
+    return false
+  }
+})
+
 const productosConCategoria = computed(() => {
-  if (!dataProductos) return []
+  if (!dataProductos.value || !dataCategorias.value) return []
 
   return dataProductos.value.map((producto) => ({
     ...producto,
-    categoria: categoriasStore.categorias[producto.id_categoria],
+    categoria: dataCategorias.value.find((categoria) => categoria.id === producto.id_categoria),
   }))
 })
 
-onMounted(async () => {
-  categoriasStore.error = null
+async function añadirProducto(datos) {
+  if (!datos) return
 
-  await categoriasStore.fetchCategorias()
-})
-
-async function añadirProducto(data) {
-  if (!data) return
-
-  await mutateAñadir(data)
+  try {
+    await mutateAñadir(datos)
+  } catch (e) {
+    console.error(e.message)
+  }
 
   if (successAñadir.value) {
     añadirAbierto.value = false
@@ -72,7 +80,11 @@ function abrirConfirmarEliminar(producto) {
 async function eliminarProducto() {
   if (!productoEliminar.value) return
 
-  await mutateEliminar(productoEliminar.value.id)
+  try {
+    await mutateEliminar(productoEliminar.value.id)
+  } catch (e) {
+    console.error(e.message)
+  }
 
   eliminarAbierto.value = false
 }
@@ -81,13 +93,18 @@ function abrirEditarProducto(producto) {
   if (!producto) return
 
   productoEditar.value = producto
+
   editarAbierto.value = true
 }
 
 async function editarProducto(data) {
   if (!productoEditar.value) return
 
-  await mutateEditar({ id: productoEditar.value.id, data })
+  try {
+    await mutateEditar({ id: productoEditar.value.id, data })
+  } catch (e) {
+    console.error(e.message)
+  }
 
   if (successEditar.value) {
     editarAbierto.value = false
@@ -96,12 +113,16 @@ async function editarProducto(data) {
 </script>
 
 <template>
-  <div v-if="loadingProductos" class="h-screen grid place-content-center">
+  <div v-if="cargando" class="h-screen grid place-content-center">
     <LoadingSpinner />
   </div>
 
-  <ErrorMessage v-else-if="errorProductos || categoriasStore.error">
-    {{ error.response?.data?.error || 'Ha ocurrido un error al cargar los datos' }}
+  <ErrorMessage v-else-if="errorProductos || errorCategorias">
+    {{
+      errorProductos.response?.data?.error ||
+      errorCategorias.response?.data?.error ||
+      'Ha ocurrido un error al cargar los datos'
+    }}
   </ErrorMessage>
 
   <div v-else>
@@ -118,6 +139,7 @@ async function editarProducto(data) {
       v-if="añadirAbierto"
       :funcion="añadirProducto"
       texto-boton="Añadir Producto"
+      :categorias="dataCategorias"
     >
       <template #titulo>Crear un nuevo producto</template>
       <template #descripcion>Introduce los datos del producto</template>
@@ -130,6 +152,7 @@ async function editarProducto(data) {
       :funcion="editarProducto"
       texto-boton="Editar Producto"
       :producto="productoEditar"
+      :categorias="dataCategorias"
     >
       <template #titulo>Editar un producto</template>
       <template #descripcion>Modifica los campos del producto</template>

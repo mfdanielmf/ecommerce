@@ -1,5 +1,5 @@
 <script setup>
-import { carritoStore } from '@/stores/carritoStore'
+import { carritoStore } from '@/stores/carrito.store'
 import { PlusIcon, MinusIcon, Trash2 } from 'lucide-vue-next'
 import { defineAsyncComponent, ref } from 'vue'
 import { toast } from 'vue-sonner'
@@ -88,6 +88,10 @@ function vaciarCarrito() {
   <div class="mt-5 flex flex-col gap-2">
     <button class="btn btn-primary">Finalizar Compra</button>
     <button class="btn btn-error" @click="vaciarAbierto = true">Vaciar Carrito</button>
-    <VaciarCarritoDialog v-model:open="vaciarAbierto" @vaciar-carrito="vaciarCarrito" v-if="vaciarAbierto"/>
+    <VaciarCarritoDialog
+      v-model:open="vaciarAbierto"
+      @vaciar-carrito="vaciarCarrito"
+      v-if="vaciarAbierto"
+    />
   </div>
 </template>

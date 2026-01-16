@@ -3,7 +3,7 @@ import { CircleXIcon } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { onMounted, ref } from 'vue'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/auth.store'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
