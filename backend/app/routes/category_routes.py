@@ -30,6 +30,7 @@ def get_categoria_id(id):
         return jsonify({"error":  f"No se ha encontrado la categoría con ID {id}"}), 404
 
 
+# GET TODOS LOS PRODUCTOS DE UNA CATEGORÍA
 @categoria_bp.route("/<int:id>/productos")
 def get_productos_categoria(id):
     try:
