@@ -6,6 +6,12 @@ export async function getCategorias() {
   return req.data.categorias
 }
 
+export async function getProductosCategoria(idCategoria) {
+  const req = await api().get(`/api/categorias/${idCategoria}/productos`)
+
+  return req.data
+}
+
 export async function insertarCategoria(data) {
   const req = await api().post('/api/categorias/', data, { withCredentials: true })
 

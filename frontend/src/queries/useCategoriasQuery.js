@@ -2,6 +2,7 @@ import {
   editarCategoria,
   eliminarCategoria,
   getCategorias,
+  getProductosCategoria,
   insertarCategoria,
 } from '@/api/categorias.api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
@@ -11,6 +12,16 @@ export function useGetCategorias() {
   return useQuery({
     queryKey: ['categorias'],
     queryFn: () => getCategorias(),
+  })
+}
+
+export function useGetProductosCategoria(id) {
+  const idCategoria = Number(id)
+
+  return useQuery({
+    queryKey: ['categoria', idCategoria],
+    queryFn: () => getProductosCategoria(idCategoria),
+    enabled: !!id,
   })
 }
 
@@ -49,8 +60,9 @@ export function useEditarCategoria() {
 
   return useMutation({
     mutationFn: ({ id, data }) => editarCategoria(id, data),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['categorias'] })
+      queryClient.invalidateQueries({ queryKey: ['categoria', Number(variables.id)] })
       toast.success(data.msg || 'Se ha editado correctamente la categoría')
     },
     onError: (e) => {
