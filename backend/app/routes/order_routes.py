@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 
-from app.models.exceptions import NoHayPedidosException, UsuarioNoExistenteException
-from app.services.order_services import obtener_todos_pedidos_usuario
+from app.models.exceptions import CampoIncorrectoException, NoHayPedidosException, NoHayProductosException, ProductoNoEncontradoException, UsuarioNoExistenteException
+from app.models.pedido import Pedido
+from app.services.order_services import insertar_pedido_base, obtener_todos_pedidos_usuario
 
 pedido_bp = Blueprint("pedidos", __name__)
 
@@ -31,7 +32,16 @@ def get_pedidos_usuario(id: int):
 def post_pedido():
     data = request.get_json()
 
-    if not data or not data.get("id") or not data.get("nombre") or not data.get("precio") or not data.get("cantidad") or not data.get("img_url") or not data.get("stock"):
-        return jsonify({"error": "Faltan datos en la petición"}), 400
+    try:
+        pedido: Pedido = insertar_pedido_base(data)
 
-    pass
+        return jsonify({
+            "msg": "¡Pedido realizado correctamente!",
+            "pedido": pedido.to_dict()
+        }), 200
+    except NoHayProductosException:
+        return jsonify({"error": "No has pedido ningún objeto"}), 400
+    except CampoIncorrectoException:
+        return jsonify({"error": "Algún campo introducido es incorrecto"}), 422
+    except ProductoNoEncontradoException as e:
+        return jsonify({"error": str(e)}), 404
