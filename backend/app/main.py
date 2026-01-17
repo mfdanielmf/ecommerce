@@ -7,6 +7,7 @@ from app.routes.product_routes import producto_bp
 from app.routes.health_route import health_bp
 from app.routes.auth_routes import auth_bp
 from app.routes.category_routes import categoria_bp
+from app.routes.order_routes import pedido_bp
 
 from decimal import Decimal
 
@@ -33,6 +34,7 @@ app.register_blueprint(producto_bp, url_prefix="/api/productos")
 app.register_blueprint(categoria_bp, url_prefix="/api/categorias")
 app.register_blueprint(health_bp, url_prefix="/api/health")
 app.register_blueprint(auth_bp, url_prefix="/auth")
+app.register_blueprint(pedido_bp, url_prefix="/api/pedidos")
 
 
 @app.cli.command("crear-tablas")
