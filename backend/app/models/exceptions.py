@@ -36,9 +36,12 @@ class CategoriaConProductosException(Exception):
 class NoHayPedidosException(Exception):
     pass
 
+
+class NoHayProductosException(Exception):
+    pass
+
+
 # GENERAL
-
-
 class CampoIncorrectoException(Exception):
     pass
 

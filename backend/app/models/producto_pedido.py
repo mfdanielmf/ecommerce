@@ -16,3 +16,13 @@ class ProductoPedido(db.Model):
         "Producto", back_populates="productos_pedido", passive_deletes=True)
     pedidos = relationship(
         "Pedido", back_populates="productos_pedido", passive_deletes=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_pedido": self.id_pedido,
+            "id_producto": self.id_producto,
+            "cantidad": self.cantidad,
+            "precio": self.precio,
+            "producto": self.productos.to_dict()
+        }

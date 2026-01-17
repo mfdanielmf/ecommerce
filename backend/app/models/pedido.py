@@ -33,5 +33,6 @@ class Pedido(db.Model):
             "total": self.total,
             "status": self.status,
             "fecha_creacion": self.fecha_creacion,
-            "id_usuario": self.id_usuario
+            "id_usuario": self.id_usuario,
+            "items": [producto_pedido.to_dict() for producto_pedido in self.productos_pedido]
         }
