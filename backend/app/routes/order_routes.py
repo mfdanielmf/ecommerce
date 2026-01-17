@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from app.models.exceptions import NoHayPedidosException, UsuarioNoExistenteException
 from app.services.order_services import obtener_todos_pedidos_usuario
 
 pedido_bp = Blueprint("pedidos", __name__)
@@ -9,12 +10,20 @@ pedido_bp = Blueprint("pedidos", __name__)
 @pedido_bp.route("/<int:id>")
 def get_pedidos_usuario(id: int):
     # RECIBIR ID POR TOKEN JWT CUANDO LO TENGAMOS TODO TESTEADO Y ACABADO !!!!!!!!!!!!!
-    data = obtener_todos_pedidos_usuario(id)
+    try:
+        data = obtener_todos_pedidos_usuario(id)
 
-    return jsonify({
-        "msg": "Pedidos cargados con éxito",
-        "pedidos": data
-    }), 200
+        return jsonify({
+            "msg": "Pedidos cargados con éxito",
+            "pedidos": data
+        }), 200
+    except UsuarioNoExistenteException:
+        return jsonify({"error": f"No se ha encontrado el usuario con id {id}"}), 404
+    except NoHayPedidosException:
+        return jsonify({
+            "msg": "Pedidos cargados con éxito",
+            "pedidos": []
+        }), 200
 
 
 # INSERTAR PEDIDO
