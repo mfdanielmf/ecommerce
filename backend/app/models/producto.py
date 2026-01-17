@@ -25,6 +25,9 @@ class Producto(db.Model):
     categoria = relationship(
         "Categoria", back_populates="productos", passive_deletes=True)
 
+    productos_pedido = relationship(
+        "ProductoPedido", back_populates="productos", passive_deletes=True)
+
     def __init__(self, nombre: str, descripcion: str, precio: float, stock: int, img_url: str, id_categoria: int):
         self.nombre = nombre
         self.descripcion = descripcion

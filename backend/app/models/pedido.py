@@ -19,6 +19,8 @@ class Pedido(db.Model):
     # Un pedido tiene 1 usuario
     usuario = relationship(
         "Usuario", back_populates="pedidos", passive_deletes=True)
+    productos_pedido = relationship(
+        "ProductoPedido", back_populates="pedidos", passive_deletes=True)
 
     def __init__(self, total: str, id_usuario: int, status: str = "pendiente"):
         self.total = total
