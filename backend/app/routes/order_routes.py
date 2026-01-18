@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from app.models.exceptions import CampoIncorrectoException, NoHayPedidosException, NoHayProductosException, PedidoNoEncontradoException, ProductoNoEncontradoException, UsuarioNoExistenteException, EstadoIncorrectoException
+from app.models.exceptions import CampoIncorrectoException, NoHayPedidosException, NoHayProductosException, PedidoNoEncontradoException, ProductoNoEncontradoException, StockInsuficienteException, UsuarioNoExistenteException, EstadoIncorrectoException
 from app.models.pedido import Pedido
 from app.services.order_services import insertar_pedido_base, obtener_todos_pedidos_usuario, actualizar_pedido
 
@@ -67,3 +67,7 @@ def put_pedido(id: int):
         return jsonify({"error": f"No se ha encontrado el producto con id {id}"}), 404
     except EstadoIncorrectoException as e:
         return jsonify({"error": str(e)}), 400
+    except ProductoNoEncontradoException as e2:
+        return jsonify({"error": str(e2)}), 404
+    except StockInsuficienteException as e3:
+        return jsonify({"error": str(e3)}), 500

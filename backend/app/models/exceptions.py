@@ -10,7 +10,6 @@ class UsuarioNoExistenteException(Exception):
 
 
 # AUTH
-
 class NombreYaUsadoException(Exception):
     pass
 
@@ -49,7 +48,12 @@ class EstadoIncorrectoException(Exception):
     pass
 
 
+class StockInsuficienteException(Exception):
+    pass
+
 # GENERAL
+
+
 class CampoIncorrectoException(Exception):
     pass
 

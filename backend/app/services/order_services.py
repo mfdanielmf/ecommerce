@@ -1,5 +1,5 @@
 from typing import Any
-from app.models.exceptions import CampoIncorrectoException, EstadoIncorrectoException, NoHayPedidosException, NoHayProductosException, PedidoNoEncontradoException, ProductoNoEncontradoException, UsuarioNoExistenteException
+from app.models.exceptions import CampoIncorrectoException, EstadoIncorrectoException, NoHayPedidosException, NoHayProductosException, PedidoNoEncontradoException, ProductoNoEncontradoException, StockInsuficienteException, UsuarioNoExistenteException
 from app.models.pedido import Pedido
 from app.models.producto import Producto
 from app.models.producto_pedido import ProductoPedido
@@ -34,7 +34,7 @@ def insertar_pedido_base(data) -> Pedido | NoHayProductosException | CampoIncorr
             producto=producto, cantidad=cantidad)
         pedido.productos_pedido.append(producto_pedido)
 
-        # Restamos el stock al hacer el pedido del producto
+        # Restamos el stock al hacer el pedido del producto (ya hacemos commit de todo cuando se inserta el pedido)
         producto.stock -= cantidad
 
     pedido = insert_order_db(pedido)
@@ -94,7 +94,7 @@ def obtener_todos_pedidos_usuario(id_usuario: int) -> Any | UsuarioNoExistenteEx
     return pedidos
 
 
-def actualizar_pedido(id: int, estado: str) -> Pedido | PedidoNoEncontradoException | EstadoIncorrectoException:
+def actualizar_pedido(id: int, estado: str) -> Pedido | PedidoNoEncontradoException | EstadoIncorrectoException | ProductoNoEncontradoException | StockInsuficienteException:
     estados: list[str] = ["pendiente", "reparto", "entregado", "cancelado"]
 
     if not estado in estados:
@@ -103,8 +103,44 @@ def actualizar_pedido(id: int, estado: str) -> Pedido | PedidoNoEncontradoExcept
 
     # Raises PedidoNoEncontradoException
     pedido: Pedido = obtener_pedido_por_id(id)
-    pedido.status = estado
 
+    # Si ya está cancelado, no lo hacemos (para evitar subir el stock)
+    if pedido.status == "cancelado" and estado == "cancelado":
+        raise EstadoIncorrectoException(
+            f"El pedido con id {pedido.id} ya está cancelado")
+
+    #  Si ya estaba cancelado y lo quiere volvera a abrir, volvemos a restar el stock y si no es posible raise
+    if pedido.status == "cancelado" and estado != "cancelado":
+        # Raises ProductoNoEnontradoException | StockInsuficienteException
+        ajustar_stock(pedido=pedido, sumar=False)
+
+    if estado == "cancelado":
+        # Raises ProductoNoEnontradoException
+        ajustar_stock(pedido=pedido, sumar=True)
+
+    pedido.status = estado
     pedido_actualizado: Pedido = update_pedido(pedido)
 
     return pedido_actualizado
+
+
+def ajustar_stock(pedido: Pedido, sumar: bool) -> None | ProductoNoEncontradoException | StockInsuficienteException:
+    for producto_pedido in pedido.productos_pedido:
+        id_producto: int = producto_pedido.id_producto
+        cantidad: int = producto_pedido.cantidad
+
+        # Raises ProductoNoencontradoException
+        # Ya hacemos commit de los cambios en la función que lo llama
+        try:
+            producto: Producto = obtener_producto_id(id_producto)
+
+            if sumar:
+                producto.stock += cantidad
+            elif (producto.stock - cantidad) < 0:
+                raise StockInsuficienteException(
+                    f"No se puede reabrir el pedido. Stock insuficiente para {producto.nombre}. Actual: {producto.stock} Pedido: {cantidad}")
+            else:
+                producto.stock -= cantidad
+        except ProductoNoEncontradoException:
+            raise ProductoNoEncontradoException(
+                f"No se ha encontrado el producto con id {id_producto}")
