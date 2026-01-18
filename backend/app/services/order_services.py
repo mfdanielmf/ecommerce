@@ -50,7 +50,7 @@ def validar_productos_order(data) -> tuple[list[dict[Producto, int]], float] | N
     total: float = 0
 
     for producto in data["carrito"]:
-        if not producto.get("id") or not producto.get("precio") or producto.get("cantidad") is None or producto.get("cantidad") < 1:
+        if not producto.get("id") or producto.get("precio") is None or producto.get("cantidad") is None or producto.get("cantidad") < 1:
             raise CampoIncorrectoException()
 
         try:
