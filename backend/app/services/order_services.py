@@ -20,15 +20,22 @@ def obtener_pedido_por_id(id: int) -> Pedido | PedidoNoEncontradoException:
     return pedido
 
 
-def insertar_pedido_base(data) -> None:
+def insertar_pedido_base(data) -> Pedido | NoHayProductosException | CampoIncorrectoException | ProductoNoEncontradoException:
+    # Raises NoHayProductosException | CampoIncorrectoException | ProductoNoEncontradoException
     items, total = validar_productos_order(data)
 
     pedido: Pedido = Pedido(total=total, id_usuario=5)
 
     for item in items:
+        producto: Producto = item["producto"]
+        cantidad: int = item["cantidad"]
+
         producto_pedido = ProductoPedido(
-            producto=item["producto"], cantidad=item["cantidad"])
+            producto=producto, cantidad=cantidad)
         pedido.productos_pedido.append(producto_pedido)
+
+        # Restamos el stock al hacer el pedido del producto
+        producto.stock -= cantidad
 
     pedido = insert_order_db(pedido)
 
