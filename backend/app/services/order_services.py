@@ -1,14 +1,23 @@
 from typing import Any
-from app.models.exceptions import CampoIncorrectoException, NoHayPedidosException, NoHayProductosException, ProductoNoEncontradoException, UsuarioNoExistenteException
+from app.models.exceptions import CampoIncorrectoException, EstadoIncorrectoException, NoHayPedidosException, NoHayProductosException, PedidoNoEncontradoException, ProductoNoEncontradoException, UsuarioNoExistenteException
 from app.models.pedido import Pedido
 from app.models.producto import Producto
 from app.models.producto_pedido import ProductoPedido
 from app.models.usuario import Usuario
-from app.repositories.order_repo import get_all_orders_user, insert_order_db
+from app.repositories.order_repo import get_all_orders_user, insert_order_db, get_order_by_id, update_pedido
 from app.services.user_services import buscar_usuario_id
 from app.services.product_services import obtener_producto_id
 
 # CUANDO ACABE TODO PASAR ID DE USUARIO REAL (DEL TOKEN JWT) DE MOMENTO ASÍ PARA TESTEAR !!!!!!!
+
+
+def obtener_pedido_por_id(id: int) -> Pedido | PedidoNoEncontradoException:
+    pedido: Pedido | None = get_order_by_id(id)
+
+    if not pedido:
+        raise PedidoNoEncontradoException()
+
+    return pedido
 
 
 def insertar_pedido_base(data) -> None:
@@ -76,3 +85,19 @@ def obtener_todos_pedidos_usuario(id_usuario: int) -> Any | UsuarioNoExistenteEx
         pedidos.append(pedido.to_dict())
 
     return pedidos
+
+
+def actualizar_pedido(id: int, estado: str) -> Pedido | PedidoNoEncontradoException | EstadoIncorrectoException:
+    estados: list[str] = ["pendiente", "reparto", "entregado", "cancelado"]
+
+    if not estado in estados:
+        raise EstadoIncorrectoException(
+            f"Estado incorrecto. Estados disponibles: {[estado for estado in estados]}")
+
+    # Raises PedidoNoEncontradoException
+    pedido: Pedido = obtener_pedido_por_id(id)
+    pedido.status = estado
+
+    pedido_actualizado: Pedido = update_pedido(pedido)
+
+    return pedido_actualizado

@@ -41,6 +41,14 @@ class NoHayProductosException(Exception):
     pass
 
 
+class PedidoNoEncontradoException(Exception):
+    pass
+
+
+class EstadoIncorrectoException(Exception):
+    pass
+
+
 # GENERAL
 class CampoIncorrectoException(Exception):
     pass
