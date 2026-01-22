@@ -40,7 +40,7 @@ const drawerAbierto = ref(false)
           </label>
 
           <CarritoVacioContent v-if="!almacenCarrito.carrito.length" />
-          <CarritoContentComponent v-else />
+          <CarritoContentComponent v-else @cerrar-carrito="drawerAbierto = false"/>
         </template>
       </div>
     </div>

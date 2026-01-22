@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 
 from app.models.exceptions import CampoIncorrectoException, NoHayPedidosException, NoHayProductosException, PedidoNoEncontradoException, ProductoNoEncontradoException, StockInsuficienteException, UsuarioNoExistenteException, EstadoIncorrectoException
 from app.models.pedido import Pedido
@@ -28,12 +29,15 @@ def get_pedidos_usuario(id: int):
 
 
 # INSERTAR PEDIDO
-@pedido_bp.route("/", methods=["POST"])
+@pedido_bp.route("", methods=["POST"])
+@jwt_required()
 def post_pedido():
+    id_usuario: int = int(get_jwt_identity())
+
     data = request.get_json()
 
     try:
-        pedido: Pedido = insertar_pedido_base(data)
+        pedido: Pedido = insertar_pedido_base(data=data, id_usuario=id_usuario)
 
         return jsonify({
             "msg": "¡Pedido realizado correctamente!",

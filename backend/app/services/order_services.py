@@ -20,11 +20,11 @@ def obtener_pedido_por_id(id: int) -> Pedido | PedidoNoEncontradoException:
     return pedido
 
 
-def insertar_pedido_base(data) -> Pedido | NoHayProductosException | CampoIncorrectoException | ProductoNoEncontradoException:
+def insertar_pedido_base(data, id_usuario) -> Pedido | NoHayProductosException | CampoIncorrectoException | ProductoNoEncontradoException:
     # Raises NoHayProductosException | CampoIncorrectoException | ProductoNoEncontradoException
     items, total = validar_productos_order(data)
 
-    pedido: Pedido = Pedido(total=total, id_usuario=5)
+    pedido: Pedido = Pedido(total=total, id_usuario=id_usuario)
 
     for item in items:
         producto: Producto = item["producto"]
