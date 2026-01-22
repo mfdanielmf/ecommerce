@@ -10,7 +10,6 @@ class UsuarioNoExistenteException(Exception):
 
 
 # AUTH
-
 class NombreYaUsadoException(Exception):
     pass
 
@@ -32,7 +31,29 @@ class CategoriaConProductosException(Exception):
     pass
 
 
+# PEDIDOS
+class NoHayPedidosException(Exception):
+    pass
+
+
+class NoHayProductosException(Exception):
+    pass
+
+
+class PedidoNoEncontradoException(Exception):
+    pass
+
+
+class EstadoIncorrectoException(Exception):
+    pass
+
+
+class StockInsuficienteException(Exception):
+    pass
+
 # GENERAL
+
+
 class CampoIncorrectoException(Exception):
     pass
 

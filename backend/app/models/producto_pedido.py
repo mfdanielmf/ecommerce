@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Float, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from app.db.db import db
+from app.models.producto import Producto
 
 
 class ProductoPedido(db.Model):
@@ -16,3 +17,18 @@ class ProductoPedido(db.Model):
         "Producto", back_populates="productos_pedido", passive_deletes=True)
     pedidos = relationship(
         "Pedido", back_populates="productos_pedido", passive_deletes=True)
+
+    def __init__(self, producto: Producto, cantidad: int):
+        self.productos = producto
+        self.precio = producto.precio
+        self.cantidad = cantidad
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_pedido": self.id_pedido,
+            "id_producto": self.id_producto,
+            "cantidad": self.cantidad,
+            "precio": self.precio,
+            "producto": self.productos.to_dict()
+        }
