@@ -5,3 +5,9 @@ export async function hacerPedido(data) {
 
   return req.data
 }
+
+export async function obtenerPedidosUsuario() {
+  const req = await api().get("/api/pedidos", { withCredentials: true })
+
+  return req.data
+}

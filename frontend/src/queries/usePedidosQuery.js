@@ -1,6 +1,6 @@
-import { hacerPedido } from "@/api/pedidos.api";
+import { hacerPedido, obtenerPedidosUsuario } from "@/api/pedidos.api";
 import { carritoStore } from "@/stores/carrito.store";
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -26,5 +26,12 @@ export function useHacerPedido() {
       }
 
     }
+  })
+}
+
+export function useObtenerPedidoUsuario() {
+  return useQuery({
+    queryKey: ["pedidos"],
+    queryFn: () => obtenerPedidosUsuario()
   })
 }
