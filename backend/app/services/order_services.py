@@ -8,8 +8,6 @@ from app.repositories.order_repo import get_all_orders_user, insert_order_db, ge
 from app.services.user_services import buscar_usuario_id
 from app.services.product_services import obtener_producto_id
 
-# CUANDO ACABE TODO PASAR ID DE USUARIO REAL (DEL TOKEN JWT) DE MOMENTO ASÍ PARA TESTEAR !!!!!!!
-
 
 def obtener_pedido_por_id(id: int) -> Pedido | PedidoNoEncontradoException:
     pedido: Pedido | None = get_order_by_id(id)
