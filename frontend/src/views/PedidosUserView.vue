@@ -2,6 +2,7 @@
 import { useObtenerPedidoUsuario } from '@/queries/usePedidosQuery';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import ErrorMessage from '@/components/common/ErrorMessage.vue';
+import PedidosTable from '@/components/pedidos/PedidosTable.vue';
 
 const {data, isLoading, error} = useObtenerPedidoUsuario()
 </script>
@@ -14,8 +15,10 @@ const {data, isLoading, error} = useObtenerPedidoUsuario()
   <ErrorMessage v-else-if="error">{{ error.resonse?.data?.error || "Error al obtener los pedidos" }}</ErrorMessage>
 
   <main v-else class="min-h-screen py-20 px-4">
-    <ul>
+    <!-- <ul>
       <li v-for="pedido of data.pedidos" :key="pedido.id">{{ pedido.id }}</li>
-    </ul>
+    </ul> -->
+
+    <PedidosTable :pedidos="data.pedidos"/>
   </main>
 </template>

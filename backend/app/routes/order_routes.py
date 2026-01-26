@@ -9,7 +9,7 @@ pedido_bp = Blueprint("pedidos", __name__)
 
 
 # GET PEDIDOS USUARIO
-@pedido_bp.route("")
+@pedido_bp.route("/")
 @jwt_required()
 def get_pedidos_usuario():
     id: int = int(get_jwt_identity())
