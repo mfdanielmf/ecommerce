@@ -18,6 +18,7 @@ const AdminPedidosView = () => import('@/views/admin/AdminPedidosView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
 const CategoriesView = () => import('@/views/CategoriesView.vue')
 const CategoryDetailsView = () => import('@/views/CategoryDetailsView.vue')
+const PedidosUserView = () => import('@/views/PedidosUserView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,6 +78,12 @@ const router = createRouter({
           props: true,
         },
         {
+          path: "/pedidos",
+          name: "pedidos_user",
+          component: PedidosUserView,
+          meta: { authRequired: true }
+        },
+        {
           path: '/forbidden',
           name: 'forbidden',
           component: ForbiddenView,
@@ -86,6 +93,7 @@ const router = createRouter({
           name: 'not_found',
           component: NotFoundView,
         },
+
       ],
     },
     {
@@ -141,7 +149,7 @@ router.beforeEach(async (to) => {
       return { name: 'login', query: { redirect: to.fullPath } }
     }
 
-    if (authStore.usuario.rol !== 'admin') return { name: 'forbidden' }
+    if (to.meta.adminRequired && authStore.usuario.rol !== 'admin') return { name: 'forbidden' }
   }
 })
 

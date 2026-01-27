@@ -1,10 +1,15 @@
 <script setup>
+import { useHacerPedido } from '@/queries/usePedidosQuery'
 import { carritoStore } from '@/stores/carrito.store'
 import { PlusIcon, MinusIcon, Trash2 } from 'lucide-vue-next'
 import { defineAsyncComponent, ref } from 'vue'
 import { toast } from 'vue-sonner'
 
 const VaciarCarritoDialog = defineAsyncComponent(() => import('./VaciarCarritoDialog.vue'))
+
+ const emit = defineEmits(["cerrarCarrito"])
+
+const { mutateAsync: mutatePedido, isPending} = useHacerPedido()
 
 const store = carritoStore()
 
@@ -30,6 +35,21 @@ function sumarCantidad(producto) {
 function vaciarCarrito() {
   store.carrito = []
   toast.info('Has vaciado el carrito', { position: 'top-center' })
+}
+
+async function hacerCompra(){
+  const productosCarrito = store.carrito
+  const data = {
+        "carrito": productosCarrito
+  }
+
+  try{
+    await mutatePedido(data)
+  } catch (e) {
+    console.error(e.message)
+  }finally{
+    emit('cerrarCarrito')
+  }
 }
 </script>
 
@@ -86,7 +106,7 @@ function vaciarCarrito() {
   </ul>
 
   <div class="mt-5 flex flex-col gap-2">
-    <button class="btn btn-primary">Finalizar Compra</button>
+    <button class="btn btn-primary" @click="hacerCompra" :disabled="isPending">{{isPending ? "Finalizando compra..." : "Finalizar Compra"}}</button>
     <button class="btn btn-error" @click="vaciarAbierto = true">Vaciar Carrito</button>
     <VaciarCarritoDialog
       v-model:open="vaciarAbierto"

@@ -7,7 +7,7 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from 'radix-vue'
-import { LayoutDashboardIcon, LogOutIcon } from 'lucide-vue-next'
+import { BoxIcon, LayoutDashboardIcon, LogOutIcon } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth.store'
 import { useRouter } from 'vue-router'
 
@@ -45,6 +45,16 @@ async function handleLogout() {
         class="min-w-55 mr-1 z-50 outline-none bg-white rounded-md p-1.25 shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)] space-y-1"
         :side-offset="5"
       >
+        <DropdownMenuItem as-child>
+          <RouterLink
+            :to="{ name: 'pedidos_user' }"
+            class="cursor-pointer text-[13px] leading-none font-semibold rounded-[3px] flex items-center gap-1 h-6.25 px-2 select-none outline-none data-disabled:pointer-events-none data-highlighted:bg-neutral-200 transition-colors"
+          >
+            <BoxIcon :size="20" />
+            Pedidos
+          </RouterLink>
+        </DropdownMenuItem>
+
         <DropdownMenuItem v-if="usuario.rol === 'admin'" value="Dashboard" as-child>
           <RouterLink
             :to="{ name: 'admin_dashboard' }"
