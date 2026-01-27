@@ -19,7 +19,7 @@ const props = defineProps({
     <!-- head -->
     <thead>
       <tr>
-        <th></th>
+        <th>Nº Pedido</th>
         <th>Total Pedido</th>
         <th>Estado</th>
         <th>Fecha Pedido</th>
